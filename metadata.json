@@ -1,0 +1,5 @@
+{
+  "name": "BalanceBook Gold",
+  "description": "A Robinhood-style budgeting app for paycheck allocation and account tracking.",
+  "requestFramePermissions": []
+}

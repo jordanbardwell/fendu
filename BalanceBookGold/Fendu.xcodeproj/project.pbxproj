@@ -1,0 +1,599 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000001001 /* Fendu.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000001001 /* Fendu.swift */; };
+		AA000002001 /* Color+Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000002001 /* Color+Brand.swift */; };
+		AA000003001 /* Date+Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000003001 /* Date+Formatting.swift */; };
+		AA000004001 /* Double+Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000004001 /* Double+Currency.swift */; };
+		AA000005001 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005001 /* Account.swift */; };
+		AA000007001 /* PaycheckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007001 /* PaycheckConfig.swift */; };
+		AA000008001 /* PaycheckInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000008001 /* PaycheckInstance.swift */; };
+		AA000009001 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009001 /* Transaction.swift */; };
+		AA000010001 /* PaycheckGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000010001 /* PaycheckGenerator.swift */; };
+		AA000011001 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000011001 /* AppState.swift */; };
+		AA000012001 /* AccountCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000012001 /* AccountCardView.swift */; };
+		AA000013001 /* AccountFormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000013001 /* AccountFormSheet.swift */; };
+		AA000014001 /* AccountsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000014001 /* AccountsGridView.swift */; };
+		AA000015001 /* AllocationsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000015001 /* AllocationsListView.swift */; };
+		AA000016001 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000016001 /* DashboardView.swift */; };
+		AA000017001 /* PaycheckSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017001 /* PaycheckSelectorView.swift */; };
+		AA000018001 /* PortfolioHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018001 /* PortfolioHeaderView.swift */; };
+		AA000019001 /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000019001 /* TransactionRowView.swift */; };
+		AA000020001 /* PaycheckSettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020001 /* PaycheckSettingsSheet.swift */; };
+		AA000021001 /* AddTransactionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021001 /* AddTransactionSheet.swift */; };
+		AA000022001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB000022001 /* Assets.xcassets */; };
+		AA000023001 /* CreditCardCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000023001 /* CreditCardCatalog.swift */; };
+		AA000025001 /* PaycheckStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000025001 /* PaycheckStatus.swift */; };
+		AA000026001 /* BillAssignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000026001 /* BillAssignment.swift */; };
+		AA000027001 /* BillRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000027001 /* BillRowView.swift */; };
+		AA000028001 /* BillsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000028001 /* BillsSectionView.swift */; };
+		AA000029001 /* AssignBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000029001 /* AssignBillSheet.swift */; };
+		AA000030001 /* EditBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000030001 /* EditBillSheet.swift */; };
+		AA000031001 /* BillSkip.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000031001 /* BillSkip.swift */; };
+		AA000032001 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000032001 /* MainTabView.swift */; };
+		AA000033001 /* BillsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000033001 /* BillsView.swift */; };
+		AA000034001 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000034001 /* ProfileView.swift */; };
+		AA000035001 /* CreateBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000035001 /* CreateBillSheet.swift */; };
+		AA000036001 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000036001 /* OnboardingView.swift */; };
+		AA000037001 /* PaycheckSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000037001 /* PaycheckSplit.swift */; };
+		AA000038001 /* SplitAssignmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000038001 /* SplitAssignmentView.swift */; };
+		AA000039001 /* DepositAccountEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000039001 /* DepositAccountEditSheet.swift */; };
+		AA000040001 /* EditTransactionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000040001 /* EditTransactionSheet.swift */; };
+		AA000041001 /* BillAmountOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000041001 /* BillAmountOverride.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AB000001001 /* Fendu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fendu.swift; sourceTree = "<group>"; };
+		AB000002001 /* Color+Brand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Brand.swift"; sourceTree = "<group>"; };
+		AB000003001 /* Date+Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatting.swift"; sourceTree = "<group>"; };
+		AB000004001 /* Double+Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Currency.swift"; sourceTree = "<group>"; };
+		AB000005001 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		AB000007001 /* PaycheckConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckConfig.swift; sourceTree = "<group>"; };
+		AB000008001 /* PaycheckInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckInstance.swift; sourceTree = "<group>"; };
+		AB000009001 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
+		AB000010001 /* PaycheckGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckGenerator.swift; sourceTree = "<group>"; };
+		AB000011001 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		AB000012001 /* AccountCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardView.swift; sourceTree = "<group>"; };
+		AB000013001 /* AccountFormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountFormSheet.swift; sourceTree = "<group>"; };
+		AB000014001 /* AccountsGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsGridView.swift; sourceTree = "<group>"; };
+		AB000015001 /* AllocationsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllocationsListView.swift; sourceTree = "<group>"; };
+		AB000016001 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		AB000017001 /* PaycheckSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckSelectorView.swift; sourceTree = "<group>"; };
+		AB000018001 /* PortfolioHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioHeaderView.swift; sourceTree = "<group>"; };
+		AB000019001 /* TransactionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRowView.swift; sourceTree = "<group>"; };
+		AB000020001 /* PaycheckSettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckSettingsSheet.swift; sourceTree = "<group>"; };
+		AB000021001 /* AddTransactionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionSheet.swift; sourceTree = "<group>"; };
+		AB000022001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AB000023001 /* CreditCardCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardCatalog.swift; sourceTree = "<group>"; };
+		AB000024001 /* Fendu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Fendu.entitlements; sourceTree = "<group>"; };
+		AB000025001 /* PaycheckStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckStatus.swift; sourceTree = "<group>"; };
+		AB000026001 /* BillAssignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillAssignment.swift; sourceTree = "<group>"; };
+		AB000027001 /* BillRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillRowView.swift; sourceTree = "<group>"; };
+		AB000028001 /* BillsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillsSectionView.swift; sourceTree = "<group>"; };
+		AB000029001 /* AssignBillSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignBillSheet.swift; sourceTree = "<group>"; };
+		AB000030001 /* EditBillSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBillSheet.swift; sourceTree = "<group>"; };
+		AB000031001 /* BillSkip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillSkip.swift; sourceTree = "<group>"; };
+		AB000032001 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		AB000033001 /* BillsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillsView.swift; sourceTree = "<group>"; };
+		AB000034001 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		AB000035001 /* CreateBillSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBillSheet.swift; sourceTree = "<group>"; };
+		AB000036001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		AB000037001 /* PaycheckSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckSplit.swift; sourceTree = "<group>"; };
+		AB000038001 /* SplitAssignmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitAssignmentView.swift; sourceTree = "<group>"; };
+		AB000039001 /* DepositAccountEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositAccountEditSheet.swift; sourceTree = "<group>"; };
+		AB000040001 /* EditTransactionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionSheet.swift; sourceTree = "<group>"; };
+		AB000041001 /* BillAmountOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillAmountOverride.swift; sourceTree = "<group>"; };
+		AC000001001 /* Fendu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fendu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AD000001001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AE000001001 = {
+			isa = PBXGroup;
+			children = (
+				AE000002001 /* Fendu */,
+				AE000003001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AE000002001 /* Fendu */ = {
+			isa = PBXGroup;
+			children = (
+				AB000001001 /* Fendu.swift */,
+				AB000024001 /* Fendu.entitlements */,
+				AB000022001 /* Assets.xcassets */,
+				AE000004001 /* Models */,
+				AE000005001 /* Services */,
+				AE000006001 /* ViewModels */,
+				AE000007001 /* Extensions */,
+				AE000008001 /* Views */,
+			);
+			path = Fendu;
+			sourceTree = "<group>";
+		};
+		AE000003001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC000001001 /* Fendu.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AE000004001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AB000005001 /* Account.swift */,
+				AB000007001 /* PaycheckConfig.swift */,
+				AB000008001 /* PaycheckInstance.swift */,
+				AB000009001 /* Transaction.swift */,
+				AB000023001 /* CreditCardCatalog.swift */,
+				AB000025001 /* PaycheckStatus.swift */,
+				AB000026001 /* BillAssignment.swift */,
+				AB000031001 /* BillSkip.swift */,
+				AB000041001 /* BillAmountOverride.swift */,
+				AB000037001 /* PaycheckSplit.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AE000005001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AB000010001 /* PaycheckGenerator.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AE000006001 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AB000011001 /* AppState.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		AE000007001 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AB000002001 /* Color+Brand.swift */,
+				AB000003001 /* Date+Formatting.swift */,
+				AB000004001 /* Double+Currency.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		AE000008001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AB000032001 /* MainTabView.swift */,
+				AE000009001 /* Dashboard */,
+				AE000013001 /* Bills */,
+				AE000010001 /* Accounts */,
+				AE000011001 /* Transactions */,
+				AE000012001 /* Settings */,
+				AE000014001 /* Profile */,
+				AE000015001 /* Onboarding */,
+				AE000016001 /* Shared */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AE000009001 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				AB000016001 /* DashboardView.swift */,
+				AB000018001 /* PortfolioHeaderView.swift */,
+				AB000017001 /* PaycheckSelectorView.swift */,
+				AB000015001 /* AllocationsListView.swift */,
+				AB000019001 /* TransactionRowView.swift */,
+				AB000027001 /* BillRowView.swift */,
+				AB000028001 /* BillsSectionView.swift */,
+				AB000029001 /* AssignBillSheet.swift */,
+				AB000030001 /* EditBillSheet.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		AE000010001 /* Accounts */ = {
+			isa = PBXGroup;
+			children = (
+				AB000014001 /* AccountsGridView.swift */,
+				AB000012001 /* AccountCardView.swift */,
+				AB000013001 /* AccountFormSheet.swift */,
+			);
+			path = Accounts;
+			sourceTree = "<group>";
+		};
+		AE000011001 /* Transactions */ = {
+			isa = PBXGroup;
+			children = (
+				AB000021001 /* AddTransactionSheet.swift */,
+				AB000040001 /* EditTransactionSheet.swift */,
+			);
+			path = Transactions;
+			sourceTree = "<group>";
+		};
+		AE000012001 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				AB000020001 /* PaycheckSettingsSheet.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		AE000013001 /* Bills */ = {
+			isa = PBXGroup;
+			children = (
+				AB000033001 /* BillsView.swift */,
+				AB000035001 /* CreateBillSheet.swift */,
+			);
+			path = Bills;
+			sourceTree = "<group>";
+		};
+		AE000014001 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				AB000034001 /* ProfileView.swift */,
+				AB000039001 /* DepositAccountEditSheet.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		AE000015001 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				AB000036001 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		AE000016001 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				AB000038001 /* SplitAssignmentView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AF000001001 /* Fendu */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B1000001001 /* Build configuration list for PBXNativeTarget "Fendu" */;
+			buildPhases = (
+				AF000002001 /* Sources */,
+				AD000001001 /* Frameworks */,
+				AF000003001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Fendu;
+			productName = BalanceBookGold;
+			productReference = AC000001001 /* Fendu.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B0000001001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					AF000001001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = B1000002001 /* Build configuration list for PBXProject "Fendu" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AE000001001;
+			productRefGroup = AE000003001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AF000001001 /* Fendu */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AF000003001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000022001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AF000002001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001001 /* Fendu.swift in Sources */,
+				AA000002001 /* Color+Brand.swift in Sources */,
+				AA000003001 /* Date+Formatting.swift in Sources */,
+				AA000004001 /* Double+Currency.swift in Sources */,
+				AA000005001 /* Account.swift in Sources */,
+				AA000036001 /* OnboardingView.swift in Sources */,
+				AA000007001 /* PaycheckConfig.swift in Sources */,
+				AA000008001 /* PaycheckInstance.swift in Sources */,
+				AA000009001 /* Transaction.swift in Sources */,
+				AA000010001 /* PaycheckGenerator.swift in Sources */,
+				AA000011001 /* AppState.swift in Sources */,
+				AA000012001 /* AccountCardView.swift in Sources */,
+				AA000013001 /* AccountFormSheet.swift in Sources */,
+				AA000014001 /* AccountsGridView.swift in Sources */,
+				AA000015001 /* AllocationsListView.swift in Sources */,
+				AA000016001 /* DashboardView.swift in Sources */,
+				AA000017001 /* PaycheckSelectorView.swift in Sources */,
+				AA000018001 /* PortfolioHeaderView.swift in Sources */,
+				AA000019001 /* TransactionRowView.swift in Sources */,
+				AA000020001 /* PaycheckSettingsSheet.swift in Sources */,
+				AA000021001 /* AddTransactionSheet.swift in Sources */,
+				AA000023001 /* CreditCardCatalog.swift in Sources */,
+				AA000025001 /* PaycheckStatus.swift in Sources */,
+				AA000026001 /* BillAssignment.swift in Sources */,
+				AA000027001 /* BillRowView.swift in Sources */,
+				AA000028001 /* BillsSectionView.swift in Sources */,
+				AA000029001 /* AssignBillSheet.swift in Sources */,
+				AA000030001 /* EditBillSheet.swift in Sources */,
+				AA000031001 /* BillSkip.swift in Sources */,
+				AA000032001 /* MainTabView.swift in Sources */,
+				AA000033001 /* BillsView.swift in Sources */,
+				AA000034001 /* ProfileView.swift in Sources */,
+				AA000035001 /* CreateBillSheet.swift in Sources */,
+				AA000037001 /* PaycheckSplit.swift in Sources */,
+				AA000038001 /* SplitAssignmentView.swift in Sources */,
+				AA000039001 /* DepositAccountEditSheet.swift in Sources */,
+				AA000040001 /* EditTransactionSheet.swift in Sources */,
+				AA000041001 /* BillAmountOverride.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B2000001001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jordanbardwell.BalanceBookGold;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B2000002001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jordanbardwell.BalanceBookGold;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B2000003001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Fendu/BalanceBookGoldDebug.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 465YW8KC93;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Fendu;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jordanbardwell.Fendu;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B2000004001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Fendu/Fendu.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 465YW8KC93;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Fendu;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jordanbardwell.Fendu;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B1000001001 /* Build configuration list for PBXNativeTarget "Fendu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2000003001 /* Debug */,
+				B2000004001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B1000002001 /* Build configuration list for PBXProject "Fendu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2000001001 /* Debug */,
+				B2000002001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B0000001001 /* Project object */;
+}
