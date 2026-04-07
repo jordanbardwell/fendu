@@ -153,6 +153,10 @@ final class SubscriptionManager {
         isPro
     }
 
+    func canSendChatMessage() -> Bool {
+        ChatMessageTracker.canSendMessage(isPro: isPro)
+    }
+
     // MARK: - Helpers
 
     var monthlyProduct: Product? {

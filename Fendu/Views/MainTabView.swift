@@ -22,13 +22,36 @@ struct MainTabView: View {
                 }
                 .tag(1)
 
+            chatTab
+
             ProfileView()
                 .tabItem {
                     Image(systemName: "person.circle.fill")
                     Text("Profile")
                 }
-                .tag(2)
+                .tag(profileTabTag)
         }
         .tint(Color.brandGreen)
+    }
+
+    @ViewBuilder
+    private var chatTab: some View {
+        #if canImport(FoundationModels)
+        if #available(iOS 26, *) {
+            ChatView()
+                .tabItem {
+                    Image(systemName: "bubble.left.and.bubble.right.fill")
+                    Text("Chat")
+                }
+                .tag(2)
+        }
+        #endif
+    }
+
+    private var profileTabTag: Int {
+        #if canImport(FoundationModels)
+        if #available(iOS 26, *) { return 3 }
+        #endif
+        return 2
     }
 }

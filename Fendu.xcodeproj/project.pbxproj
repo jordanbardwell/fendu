@@ -58,6 +58,16 @@
 		AA000051001 /* FenduLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000051001 /* FenduLiveActivityAttributes.swift */; };
 		AA000052001 /* NotificationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000052001 /* NotificationPreferences.swift */; };
 		AA000053001 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000053001 /* NotificationScheduler.swift */; };
+		AA000054001 /* BudgetDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000054001 /* BudgetDataProvider.swift */; };
+		AA000055001 /* ChatMessageTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000055001 /* ChatMessageTracker.swift */; };
+		AA000056001 /* BudgetAssistantTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000056001 /* BudgetAssistantTools.swift */; };
+		AA000057001 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000057001 /* ChatViewModel.swift */; };
+		AA000058001 /* InsightViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000058001 /* InsightViewModel.swift */; };
+		AA000059001 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000059001 /* ChatView.swift */; };
+		AA000060001 /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000060001 /* ChatBubbleView.swift */; };
+		AA000061001 /* ChatUnavailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000061001 /* ChatUnavailableView.swift */; };
+		AA000062001 /* InsightCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000062001 /* InsightCardView.swift */; };
+		AA000063001 /* TypingBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000063001 /* TypingBubbleView.swift */; };
 		BB000001001 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005001 /* Account.swift */; };
 		BB000002001 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009001 /* Transaction.swift */; };
 		BB000003001 /* PaycheckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007001 /* PaycheckConfig.swift */; };
@@ -159,6 +169,16 @@
 		AB000051001 /* FenduLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FenduLiveActivityAttributes.swift; sourceTree = "<group>"; };
 		AB000052001 /* NotificationPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferences.swift; sourceTree = "<group>"; };
 		AB000053001 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
+		AB000054001 /* BudgetDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetDataProvider.swift; sourceTree = "<group>"; };
+		AB000055001 /* ChatMessageTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageTracker.swift; sourceTree = "<group>"; };
+		AB000056001 /* BudgetAssistantTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetAssistantTools.swift; sourceTree = "<group>"; };
+		AB000057001 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		AB000058001 /* InsightViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightViewModel.swift; sourceTree = "<group>"; };
+		AB000059001 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		AB000060001 /* ChatBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleView.swift; sourceTree = "<group>"; };
+		AB000061001 /* ChatUnavailableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUnavailableView.swift; sourceTree = "<group>"; };
+		AB000062001 /* InsightCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightCardView.swift; sourceTree = "<group>"; };
+		AB000063001 /* TypingBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingBubbleView.swift; sourceTree = "<group>"; };
 		AC000001001 /* Fendu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fendu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7B254C2F847A3F004648C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DA7B25512F849DC8004648C8 /* FenduWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FenduWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -273,6 +293,9 @@
 				AB000051001 /* FenduLiveActivityAttributes.swift */,
 				AB000052001 /* NotificationPreferences.swift */,
 				AB000053001 /* NotificationScheduler.swift */,
+				AB000054001 /* BudgetDataProvider.swift */,
+				AB000055001 /* ChatMessageTracker.swift */,
+				AB000056001 /* BudgetAssistantTools.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -281,6 +304,8 @@
 			isa = PBXGroup;
 			children = (
 				AB000011001 /* AppState.swift */,
+				AB000057001 /* ChatViewModel.swift */,
+				AB000058001 /* InsightViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -308,6 +333,7 @@
 				AE000015001 /* Onboarding */,
 				AE000016001 /* Shared */,
 				AE000017001 /* Subscription */,
+				AE000018001 /* Chat */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -324,6 +350,7 @@
 				AB000028001 /* BillsSectionView.swift */,
 				AB000029001 /* AssignBillSheet.swift */,
 				AB000030001 /* EditBillSheet.swift */,
+				AB000062001 /* InsightCardView.swift */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -397,6 +424,17 @@
 				AB000045001 /* ProFeaturePaywallView.swift */,
 			);
 			path = Subscription;
+			sourceTree = "<group>";
+		};
+		AE000018001 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				AB000059001 /* ChatView.swift */,
+				AB000060001 /* ChatBubbleView.swift */,
+				AB000061001 /* ChatUnavailableView.swift */,
+				AB000063001 /* TypingBubbleView.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		DAAD3F6A2F832843006C0677 /* Frameworks */ = {
@@ -564,6 +602,16 @@
 				AA000051001 /* FenduLiveActivityAttributes.swift in Sources */,
 				AA000052001 /* NotificationPreferences.swift in Sources */,
 				AA000053001 /* NotificationScheduler.swift in Sources */,
+				AA000054001 /* BudgetDataProvider.swift in Sources */,
+				AA000055001 /* ChatMessageTracker.swift in Sources */,
+				AA000056001 /* BudgetAssistantTools.swift in Sources */,
+				AA000057001 /* ChatViewModel.swift in Sources */,
+				AA000058001 /* InsightViewModel.swift in Sources */,
+				AA000059001 /* ChatView.swift in Sources */,
+				AA000060001 /* ChatBubbleView.swift in Sources */,
+				AA000061001 /* ChatUnavailableView.swift in Sources */,
+				AA000062001 /* InsightCardView.swift in Sources */,
+				AA000063001 /* TypingBubbleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

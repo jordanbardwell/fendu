@@ -19,6 +19,7 @@ struct ProFeaturePaywallView: View {
         case bills = "Unlimited Bills"
         case depositSplits = "Deposit Splits"
         case incomeTracking = "Income Tracking"
+        case aiChat = "AI Budget Assistant"
 
         var icon: String {
             switch self {
@@ -27,6 +28,7 @@ struct ProFeaturePaywallView: View {
             case .bills: return "arrow.clockwise"
             case .depositSplits: return "chart.pie.fill"
             case .incomeTracking: return "arrow.down.left"
+            case .aiChat: return "bubble.left.and.bubble.right.fill"
             }
         }
 
@@ -37,6 +39,7 @@ struct ProFeaturePaywallView: View {
             case .bills: return Color.brandOrange
             case .depositSplits: return .purple
             case .incomeTracking: return Color.brandGreen
+            case .aiChat: return .purple
             }
         }
     }
@@ -56,6 +59,7 @@ struct ProFeaturePaywallView: View {
             (.bills, FeatureItem(icon: "arrow.clockwise", color: Color.brandOrange, title: "Unlimited Bills", description: "Plan and track all your recurring expenses")),
             (.depositSplits, FeatureItem(icon: "chart.pie.fill", color: .purple, title: "Deposit Splits", description: "Split paychecks across multiple accounts")),
             (.incomeTracking, FeatureItem(icon: "arrow.down.left", color: Color.brandGreen, title: "Income Tracking", description: "Record extra income from any source")),
+            (.aiChat, FeatureItem(icon: "bubble.left.and.bubble.right.fill", color: .purple, title: "AI Budget Assistant", description: "Chat with AI about your spending")),
         ]
 
         var sorted = all.sorted { lhs, _ in lhs.0 == trigger }

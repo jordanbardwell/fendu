@@ -1,5 +1,8 @@
 import SwiftUI
 import SwiftData
+#if canImport(FoundationModels)
+import FoundationModels
+#endif
 
 enum AccountFormTarget: Identifiable {
     case new
@@ -235,11 +238,41 @@ struct DashboardView: View {
     @State private var showProPaywall = false
     @State private var proPaywallTrigger: ProFeaturePaywallView.Trigger = .accountLimit
 
+    // AI Insight (iOS 26+ only)
+    #if canImport(FoundationModels)
+    @State private var _insightViewModel: AnyObject?
+
+    @available(iOS 26, *)
+    private var insightViewModel: InsightViewModel {
+        if let existing = _insightViewModel as? InsightViewModel {
+            return existing
+        }
+        let vm = InsightViewModel()
+        _insightViewModel = vm
+        return vm
+    }
+    #endif
+
     var body: some View {
         @Bindable var appState = appState
 
         NavigationStack {
             List {
+                // AI Insight Card (iOS 26+)
+                #if canImport(FoundationModels)
+                if #available(iOS 26, *) {
+                    Section {
+                        InsightCardView(
+                            insight: insightViewModel.insight,
+                            isLoading: insightViewModel.isLoading
+                        )
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 0, trailing: 16))
+                        .listRowBackground(Color.clear)
+                    }
+                }
+                #endif
+
                 // Portfolio Header
                 Section {
                     PortfolioHeaderView(
@@ -422,6 +455,25 @@ struct DashboardView: View {
         .onAppear {
             appState.selectInitialPaycheck(instances: paycheckInstances)
             scheduleNotificationsIfNeeded()
+        }
+        .task {
+            #if canImport(FoundationModels)
+            if #available(iOS 26, *) {
+                if let config, let currentId = PaycheckGenerator.currentPaycheckId(from: paycheckInstances) {
+                    let provider = BudgetDataProvider(
+                        config: config,
+                        accounts: accounts,
+                        allTransactions: allTransactions,
+                        allBillAssignments: allBillAssignments,
+                        allBillSkips: allBillSkips,
+                        allBillOverrides: allBillOverrides,
+                        paycheckStatuses: paycheckStatuses,
+                        splits: splits
+                    )
+                    await insightViewModel.generateIfNeeded(provider: provider, currentPaycheckId: currentId)
+                }
+            }
+            #endif
         }
         .onChange(of: paycheckInstances) { _, newInstances in
             appState.selectInitialPaycheck(instances: newInstances)
