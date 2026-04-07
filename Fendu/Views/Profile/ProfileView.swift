@@ -485,6 +485,7 @@ struct ProfileView: View {
                         .tracking(1.5)
 
                     Button {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
                             showDatePicker.toggle()
                         }
