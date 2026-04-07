@@ -68,6 +68,7 @@
 		AA000061001 /* ChatUnavailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000061001 /* ChatUnavailableView.swift */; };
 		AA000062001 /* InsightCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000062001 /* InsightCardView.swift */; };
 		AA000063001 /* TypingBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000063001 /* TypingBubbleView.swift */; };
+		AA000064001 /* OnboardingQuestionnaireView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000064001 /* OnboardingQuestionnaireView.swift */; };
 		BB000001001 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005001 /* Account.swift */; };
 		BB000002001 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009001 /* Transaction.swift */; };
 		BB000003001 /* PaycheckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007001 /* PaycheckConfig.swift */; };
@@ -179,6 +180,7 @@
 		AB000061001 /* ChatUnavailableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUnavailableView.swift; sourceTree = "<group>"; };
 		AB000062001 /* InsightCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightCardView.swift; sourceTree = "<group>"; };
 		AB000063001 /* TypingBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingBubbleView.swift; sourceTree = "<group>"; };
+		AB000064001 /* OnboardingQuestionnaireView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingQuestionnaireView.swift; sourceTree = "<group>"; };
 		AC000001001 /* Fendu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fendu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7B254C2F847A3F004648C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DA7B25512F849DC8004648C8 /* FenduWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FenduWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -403,6 +405,7 @@
 		AE000015001 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				AB000064001 /* OnboardingQuestionnaireView.swift */,
 				AB000036001 /* OnboardingView.swift */,
 			);
 			path = Onboarding;
@@ -612,6 +615,7 @@
 				AA000061001 /* ChatUnavailableView.swift in Sources */,
 				AA000062001 /* InsightCardView.swift in Sources */,
 				AA000063001 /* TypingBubbleView.swift in Sources */,
+				AA000064001 /* OnboardingQuestionnaireView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

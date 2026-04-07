@@ -55,84 +55,56 @@ struct OnboardingView: View {
             }
     }
 
+    private var progress: CGFloat {
+        CGFloat(step + 8) / 12.0
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            // Progress dots
-            if step < 6 {
-                HStack(spacing: 8) {
-                    ForEach(0..<6, id: \.self) { i in
-                        Circle()
-                            .fill(i <= step ? Color.brandGreen : Color(.systemGray4))
-                            .frame(width: 8, height: 8)
+            // Progress bar (matches questionnaire style, continues from 8/12)
+            if step < 5 {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color(.systemGray5))
+                            .frame(height: 4)
+                        Capsule()
+                            .fill(Color.brandGreen)
+                            .frame(width: geo.size.width * progress, height: 4)
+                            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: step)
                     }
                 }
-                .padding(.top, 20)
-                .padding(.bottom, 32)
+                .frame(height: 4)
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+                .padding(.bottom, 28)
             }
 
             switch step {
             case 0:
-                welcomeStep
-            case 1:
                 paycheckStep
-            case 2:
+            case 1:
                 depositAccountsStep
-            case 3:
+            case 2:
                 accountsStep
-            case 4:
+            case 3:
                 billsStep
-            case 5:
+            case 4:
                 notificationStep
-            case 6:
+            case 5:
                 proPaywallStep
             default:
                 EmptyView()
             }
         }
         .background(Color(.systemGroupedBackground))
-    }
-
-    // MARK: - Welcome
-
-    private var welcomeStep: some View {
-        VStack(spacing: 24) {
-            Spacer()
-
-            ZStack {
-                Circle()
-                    .fill(Color.brandGreen.opacity(0.12))
-                    .frame(width: 100, height: 100)
-                Image(systemName: "dollarsign.circle.fill")
-                    .font(.system(size: 48))
-                    .foregroundStyle(Color.brandGreen)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
             }
-
-            Text("Welcome to\nFendu")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-
-            Text("Track your paychecks, allocate funds,\nand manage your bills — all in one place.")
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-
-            Spacer()
-
-            Button {
-                withAnimation { step = 1 }
-            } label: {
-                Text("Get Started")
-                    .font(.body)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 18)
-                    .background(Color.brandGreen)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-            }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 40)
         }
     }
 
@@ -170,6 +142,10 @@ struct OnboardingView: View {
                         }
                         .padding(16)
                         .background(Color(.systemGray6))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color(.systemGray4), lineWidth: 1)
+                        )
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
 
@@ -228,6 +204,7 @@ struct OnboardingView: View {
                                 .tracking(1.5)
 
                             Button {
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
                                     showDatePicker.toggle()
                                 }
@@ -259,38 +236,28 @@ struct OnboardingView: View {
                         .transition(.opacity.combined(with: .move(edge: .top)))
                     }
                 }
+                .padding(20)
+                .background(Color(.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
                 .padding(.horizontal, 24)
             }
+            .scrollDismissesKeyboard(.interactively)
 
             Spacer(minLength: 0)
 
-            HStack(spacing: 12) {
-                Button {
-                    withAnimation { step = 0 }
-                } label: {
-                    Text("Back")
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.primary)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
-                        .background(Color(.systemGray6))
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                }
-
-                Button {
-                    savePaycheckConfig()
-                    withAnimation { step = 2 }
-                } label: {
-                    Text("Next")
-                        .font(.body)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
-                        .background(Color.brandGreen)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                }
+            Button {
+                savePaycheckConfig()
+                withAnimation { step = 1 }
+            } label: {
+                Text("Next")
+                    .font(.body)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(Color.brandGreen)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 40)
@@ -335,6 +302,10 @@ struct OnboardingView: View {
                     .fontWeight(.medium)
                     .padding(14)
                     .background(Color(.systemGray6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color(.systemGray4), lineWidth: 1)
+                    )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
 
                 HStack(spacing: 8) {
@@ -363,6 +334,10 @@ struct OnboardingView: View {
                     .disabled(newDepositName.isEmpty)
                 }
             }
+            .padding(16)
+            .background(Color(.systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
             .padding(.horizontal, 24)
 
             ScrollView {
@@ -423,12 +398,13 @@ struct OnboardingView: View {
                     }
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
 
             Spacer(minLength: 0)
 
             HStack(spacing: 12) {
                 Button {
-                    withAnimation { step = 1 }
+                    withAnimation { step = 0 }
                 } label: {
                     Text("Back")
                         .font(.body)
@@ -446,13 +422,13 @@ struct OnboardingView: View {
                         let idStr = depositAccounts[0].id.uuidString
                         splitModes[idStr] = .remainder
                         saveSplits()
-                        withAnimation { step = 3 }
+                        withAnimation { step = 2 }
                     } else if !subscriptionManager.canSplitDeposits(depositCount: depositAccounts.count) {
                         // Not Pro — auto-remainder first account, skip splits
                         let idStr = depositAccounts[0].id.uuidString
                         splitModes[idStr] = .remainder
                         saveSplits()
-                        withAnimation { step = 3 }
+                        withAnimation { step = 2 }
                     } else {
                         isGoingForward = true
                         withAnimation { depositSubStep = 1 }
@@ -682,7 +658,7 @@ struct OnboardingView: View {
 
                 Button {
                     saveSplits()
-                    withAnimation { step = 3 }
+                    withAnimation { step = 2 }
                 } label: {
                     Text("Next")
                         .font(.body)
@@ -701,7 +677,7 @@ struct OnboardingView: View {
 
     private func computeAssignedToOthers(excluding accountId: String) -> Double {
         depositAccounts
-            .filter { $0.id.uuidString != accountId && splitModes[$0.id.uuidString] == .fixed }
+            .filter { $0.id.uuidString != accountId && (splitModes[$0.id.uuidString] ?? .fixed) == .fixed }
             .reduce(0.0) { $0 + (Double(splitFixedAmounts[$1.id.uuidString] ?? "") ?? 0) }
     }
 
@@ -815,7 +791,7 @@ struct OnboardingView: View {
 
             HStack(spacing: 12) {
                 Button {
-                    withAnimation { step = 2 }
+                    withAnimation { step = 1 }
                 } label: {
                     Text("Back")
                         .font(.body)
@@ -828,7 +804,7 @@ struct OnboardingView: View {
                 }
 
                 Button {
-                    withAnimation { step = 4 }
+                    withAnimation { step = 3 }
                 } label: {
                     Text("Next")
                         .font(.body)
@@ -956,7 +932,7 @@ struct OnboardingView: View {
 
             HStack(spacing: 12) {
                 Button {
-                    withAnimation { step = 3 }
+                    withAnimation { step = 2 }
                 } label: {
                     Text("Back")
                         .font(.body)
@@ -969,7 +945,7 @@ struct OnboardingView: View {
                 }
 
                 Button {
-                    withAnimation { step = 5 }
+                    withAnimation { step = 4 }
                 } label: {
                     Text("Next")
                         .font(.body)
@@ -1027,7 +1003,7 @@ struct OnboardingView: View {
             .padding(.horizontal, 24)
 
             Button {
-                withAnimation { step = 6 }
+                withAnimation { step = 5 }
             } label: {
                 Text("Maybe Later")
                     .font(.subheadline)
@@ -1042,7 +1018,7 @@ struct OnboardingView: View {
             options: [.alert, .sound, .badge]
         ) { _, _ in
             DispatchQueue.main.async {
-                withAnimation { step = 6 }
+                withAnimation { step = 5 }
             }
         }
     }
@@ -1053,7 +1029,6 @@ struct OnboardingView: View {
         ProPaywallView(onContinueFree: {
             onComplete()
         })
-        .ignoresSafeArea()
     }
 
     // MARK: - Helpers

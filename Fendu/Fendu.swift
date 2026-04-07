@@ -73,13 +73,22 @@ struct RootView: View {
     @Environment(AppState.self) private var appState
     @Query private var configs: [PaycheckConfig]
     @State private var needsOnboarding: Bool?
+    @AppStorage("hasCompletedQuestionnaire") private var hasCompletedQuestionnaire = false
 
     var body: some View {
         let showOnboarding = needsOnboarding ?? configs.isEmpty
 
         if showOnboarding {
-            OnboardingView {
-                withAnimation { needsOnboarding = false }
+            Group {
+                if !hasCompletedQuestionnaire {
+                    OnboardingQuestionnaireView {
+                        withAnimation { hasCompletedQuestionnaire = true }
+                    }
+                } else {
+                    OnboardingView {
+                        withAnimation { needsOnboarding = false }
+                    }
+                }
             }
             .onAppear {
                 if needsOnboarding == nil {

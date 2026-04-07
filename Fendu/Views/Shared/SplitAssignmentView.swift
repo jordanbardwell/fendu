@@ -25,16 +25,24 @@ struct SplitAssignmentView: View {
         return paycheckAmount - assignedToOthers - myAmount
     }
 
+    private var bannerAmount: Double {
+        splitMode == .remainder ? remainderValue : remainingToAssign
+    }
+
+    private var bannerLabel: String {
+        splitMode == .remainder ? "this account receives" : "left to assign"
+    }
+
     var body: some View {
         VStack(spacing: 28) {
             // Running total banner
             VStack(spacing: 4) {
-                Text(remainingToAssign.asCurrency())
+                Text(bannerAmount.asCurrency())
                     .font(.system(size: 36, weight: .bold))
-                    .foregroundStyle(remainingToAssign >= 0 ? Color.brandGreen : Color.brandOrange)
+                    .foregroundStyle(bannerAmount >= 0 ? Color.brandGreen : Color.brandOrange)
                     .contentTransition(.numericText())
-                    .animation(.easeInOut(duration: 0.2), value: remainingToAssign)
-                Text("left to assign")
+                    .animation(.easeInOut(duration: 0.2), value: bannerAmount)
+                Text(bannerLabel)
                     .font(.subheadline)
                     .fontWeight(.medium)
                     .foregroundStyle(.gray)
@@ -42,7 +50,7 @@ struct SplitAssignmentView: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 20)
             .background(
-                (remainingToAssign >= 0 ? Color.brandGreen : Color.brandOrange).opacity(0.06)
+                (bannerAmount >= 0 ? Color.brandGreen : Color.brandOrange).opacity(0.06)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16))
 
