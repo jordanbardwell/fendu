@@ -49,12 +49,14 @@ final class SubscriptionManager {
             let storeProducts = try await Product.products(for: Self.productIDs)
             print("[SubscriptionManager] Loaded \(storeProducts.count) products: \(storeProducts.map { "\($0.id) - \($0.displayName) - \($0.displayPrice)" })")
             products = storeProducts.sorted { ($0.subscription?.subscriptionPeriod.value ?? 0) < ($1.subscription?.subscriptionPeriod.value ?? 0) }
+            #if DEBUG
             if storeProducts.isEmpty {
                 print("[SubscriptionManager] ⚠️ 0 products returned. Verify:")
-                print("  1. Edit Scheme → Run → Options → StoreKit Configuration = FenduPro.storekit")
-                print("  2. Clean build folder (⇧⌘K) and rebuild")
-                print("  3. Delete app from simulator, then run again")
+                print("  - Xcode: Edit Scheme → Run → Options → StoreKit Configuration = FenduPro.storekit")
+                print("  - TestFlight: Ensure products are 'Ready to Submit' in App Store Connect")
+                print("  - Check Paid Apps agreement is active in App Store Connect → Business")
             }
+            #endif
         } catch {
             print("[SubscriptionManager] ❌ Failed to load products: \(error)")
         }
