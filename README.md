@@ -17,7 +17,7 @@ Provide a clean, simple way to plan where each paycheck goes — splitting it ac
 - **Active Progress Bars** — Two-tone breakdown bar showing allocated vs. spent per deposit account; paycheck pills fill proportionally as money is assigned
 - **Done State** — Mark paychecks as complete to lock allocations and bills
 - **Native Swipe Actions** — Swipe to delete transactions or unassign bills
-- **Smart Notifications** — Bill reminders (1 day before payday), overspending alerts (when 90%+ of paycheck is used), and payday notifications (new pay period). All local, no server needed. See [notifications.md](docs/notifications.md) for details
+- **Smart Notifications** — Bill reminders (1 day before payday), overspending alerts (fires once when 90%+ is used, re-triggers if you drop below and cross again), and payday notifications (new pay period). All local, no server needed. See [notifications.md](docs/notifications.md) for details
 - **Home Screen Widget** — Small and medium widgets showing remaining paycheck balance and breakdown bar (bills, spent, remaining)
 - **Live Activity** — Lock Screen and Dynamic Island showing remaining balance during active paycheck period
 - **Guided Onboarding** — 7-step wizard: Welcome → Paycheck → Deposit Accounts → Other Accounts → Bills → Notifications → Pro Paywall

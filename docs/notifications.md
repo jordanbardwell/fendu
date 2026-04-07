@@ -15,7 +15,9 @@ Fendu uses local notifications via `UNUserNotificationCenter` — no server or p
 - **Trigger**: 8:00 PM the same day the threshold is crossed (or 30 seconds if already past 8 PM)
 - **Conditions**: Spending exceeds 90% of paycheck, more than 1 day until next paycheck, paycheck not marked done
 - **Preference key**: `notif.overspending`
+- **Dedup key**: `notif.overspendingSentForPaycheck` — stores the paycheck timestamp to prevent repeat alerts
 - **Note**: Also displays as an in-app banner (not suppressed in foreground like other notification types)
+- **Re-trigger behavior**: Fires once per threshold crossing. If spending drops below 90% (e.g., deleting a transaction) and then exceeds 90% again, the alert fires again. The dedup flag resets when spending drops below the threshold.
 
 ### Payday Notifications
 - **Content**: "New pay period started! You have {$X} to budget"
@@ -39,7 +41,7 @@ Fendu uses local notifications via `UNUserNotificationCenter` — no server or p
 ### Scheduling Flow
 
 1. User opens the app → `DashboardView.onAppear` fires
-2. `scheduleNotificationsIfNeeded()` builds a `BudgetSnapshot` from current data
+2. `scheduleNotificationsIfNeeded()` builds a `BudgetSnapshot` via `BudgetCalculator.currentSnapshot()` (always uses the current active paycheck, not the one being viewed)
 3. `NotificationScheduler.rescheduleAll()` is called:
    - Removes all pending Fendu notifications
    - Checks system permission (`authorizationStatus == .authorized`)
@@ -71,5 +73,13 @@ Stored in `UserDefaults.standard`:
 | `notif.billReminders` | Bool | `true` | Bill reminder notifications |
 | `notif.overspending` | Bool | `true` | Overspending alert notifications |
 | `notif.payday` | Bool | `true` | Payday notifications |
+| `notif.overspendingSentForPaycheck` | String | `nil` | Paycheck timestamp for which overspending alert already fired (resets when spending drops below 90%) |
 
 Toggling a preference off in Profile cancels all pending notifications. They are rescheduled on the next DashboardView appear with the updated preferences.
+
+### Permission States in Profile
+
+The Notifications card in ProfileView handles three states:
+- **Never asked** (`notDetermined`): Shows a green "Enable Notifications" button that triggers the iOS permission dialog
+- **Denied**: Shows an orange warning banner with a "Settings" button to open iOS Settings
+- **Authorized**: Shows the three toggles fully enabled

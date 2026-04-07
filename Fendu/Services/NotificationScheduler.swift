@@ -11,6 +11,9 @@ enum NotificationScheduler {
     private static let overspendingId = "fendu.overspending"
     private static let paydayId = "fendu.payday"
 
+    // Track which paycheck already received an overspending alert
+    private static let overspendingSentKey = "notif.overspendingSentForPaycheck"
+
     // MARK: - Public
 
     static func rescheduleAll(
@@ -77,6 +80,7 @@ enum NotificationScheduler {
     // MARK: - Overspending Alert
 
     /// Schedules an overspending alert when allocated + bills exceed 90% of the paycheck.
+    /// Only fires once per paycheck period to avoid spamming.
     private static func scheduleOverspendingAlert(snapshot: BudgetSnapshot) {
         guard NotificationPreferences.overspendingAlertsEnabled,
               snapshot.paycheckAmount > 0,
@@ -86,7 +90,21 @@ enum NotificationScheduler {
         let spent = snapshot.totalAllocated + snapshot.totalBills
         let usedPercent = spent / snapshot.paycheckAmount
 
-        guard usedPercent >= overspendingThreshold else { return }
+        let paycheckKey = "\(snapshot.paycheckDate.timeIntervalSince1970)"
+
+        guard usedPercent >= overspendingThreshold else {
+            // Dropped below threshold — reset so it can fire again if they go back over
+            if UserDefaults.standard.string(forKey: overspendingSentKey) == paycheckKey {
+                UserDefaults.standard.removeObject(forKey: overspendingSentKey)
+            }
+            return
+        }
+
+        // Only send once per crossing (resets if they drop below and go back over)
+        if UserDefaults.standard.string(forKey: overspendingSentKey) == paycheckKey {
+            return
+        }
+        UserDefaults.standard.set(paycheckKey, forKey: overspendingSentKey)
 
         let percentText = Int(usedPercent * 100)
 
