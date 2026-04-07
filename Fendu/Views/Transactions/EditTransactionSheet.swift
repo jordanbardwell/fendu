@@ -378,6 +378,7 @@ struct EditTransactionSheet: View {
             ? (selectedAccount?.id.uuidString ?? "")
             : (selectedFundingAccount?.id.uuidString ?? fundingAccounts.first?.id.uuidString ?? "")
 
+        WidgetReloader.reloadAll()
         dismiss()
     }
 }

@@ -292,6 +292,7 @@ struct AccountFormSheet: View {
             let newAccount = Account(name: finalName, type: type)
             modelContext.insert(newAccount)
         }
+        WidgetReloader.reloadAll()
         dismiss()
     }
 }

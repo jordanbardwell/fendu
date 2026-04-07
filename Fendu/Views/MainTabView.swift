@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @Environment(AppState.self) private var appState
+    @Environment(SubscriptionManager.self) private var subscriptionManager
 
     var body: some View {
         @Bindable var appState = appState

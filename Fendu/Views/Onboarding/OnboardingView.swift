@@ -1,8 +1,10 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 struct OnboardingView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(SubscriptionManager.self) private var subscriptionManager
     @Query private var accounts: [Account]
     @Query private var configs: [PaycheckConfig]
     @Query private var allBillAssignments: [BillAssignment]
@@ -13,6 +15,9 @@ struct OnboardingView: View {
     @State private var step = 0
     @State private var showAccountForm = false
     @State private var showCreateBill = false
+    @State private var showAccountLimitPaywall = false
+    @State private var showBillsPaywall = false
+    @State private var showDepositLimitPaywall = false
 
     // Paycheck setup
     @State private var paycheckAmount = ""
@@ -53,15 +58,17 @@ struct OnboardingView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Progress dots
-            HStack(spacing: 8) {
-                ForEach(0..<5, id: \.self) { i in
-                    Circle()
-                        .fill(i <= step ? Color.brandGreen : Color(.systemGray4))
-                        .frame(width: 8, height: 8)
+            if step < 6 {
+                HStack(spacing: 8) {
+                    ForEach(0..<6, id: \.self) { i in
+                        Circle()
+                            .fill(i <= step ? Color.brandGreen : Color(.systemGray4))
+                            .frame(width: 8, height: 8)
+                    }
                 }
+                .padding(.top, 20)
+                .padding(.bottom, 32)
             }
-            .padding(.top, 20)
-            .padding(.bottom, 32)
 
             switch step {
             case 0:
@@ -74,6 +81,10 @@ struct OnboardingView: View {
                 accountsStep
             case 4:
                 billsStep
+            case 5:
+                notificationStep
+            case 6:
+                proPaywallStep
             default:
                 EmptyView()
             }
@@ -436,6 +447,12 @@ struct OnboardingView: View {
                         splitModes[idStr] = .remainder
                         saveSplits()
                         withAnimation { step = 3 }
+                    } else if !subscriptionManager.canSplitDeposits(depositCount: depositAccounts.count) {
+                        // Not Pro — auto-remainder first account, skip splits
+                        let idStr = depositAccounts[0].id.uuidString
+                        splitModes[idStr] = .remainder
+                        saveSplits()
+                        withAnimation { step = 3 }
                     } else {
                         isGoingForward = true
                         withAnimation { depositSubStep = 1 }
@@ -703,7 +720,12 @@ struct OnboardingView: View {
             .padding(.horizontal, 24)
 
             Button {
-                showAccountForm = true
+                let accountCount = accounts.filter({ $0.type == .credit || $0.type == .other }).count
+                if subscriptionManager.canCreateAccount(currentCount: accountCount) {
+                    showAccountForm = true
+                } else {
+                    showAccountLimitPaywall = true
+                }
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "plus.circle.fill")
@@ -723,6 +745,12 @@ struct OnboardingView: View {
                 AccountFormSheet(editingAccount: nil)
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $showAccountLimitPaywall) {
+                ProFeaturePaywallView(trigger: .accountLimit)
+            }
+            .sheet(isPresented: $showDepositLimitPaywall) {
+                ProFeaturePaywallView(trigger: .depositLimit)
             }
 
             if !nonDepositNonBillAccounts.isEmpty {
@@ -832,7 +860,12 @@ struct OnboardingView: View {
             .padding(.horizontal, 24)
 
             Button {
-                showCreateBill = true
+                let billCount = allBillAssignments.count
+                if subscriptionManager.canCreateBill(currentCount: billCount) {
+                    showCreateBill = true
+                } else {
+                    showBillsPaywall = true
+                }
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "plus.circle.fill")
@@ -856,6 +889,9 @@ struct OnboardingView: View {
                 )
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $showBillsPaywall) {
+                ProFeaturePaywallView(trigger: .bills)
             }
 
             if !allBillAssignments.isEmpty {
@@ -933,9 +969,9 @@ struct OnboardingView: View {
                 }
 
                 Button {
-                    onComplete()
+                    withAnimation { step = 5 }
                 } label: {
-                    Text("Finish Setup")
+                    Text("Next")
                         .font(.body)
                         .fontWeight(.bold)
                         .foregroundStyle(.white)
@@ -948,6 +984,76 @@ struct OnboardingView: View {
             .padding(.horizontal, 24)
             .padding(.bottom, 40)
         }
+    }
+
+    // MARK: - Notifications (Step 5)
+
+    private var notificationStep: some View {
+        VStack(spacing: 24) {
+            Spacer()
+
+            ZStack {
+                Circle()
+                    .fill(Color.brandGreen.opacity(0.12))
+                    .frame(width: 100, height: 100)
+                Image(systemName: "bell.badge.fill")
+                    .font(.system(size: 48))
+                    .foregroundStyle(Color.brandGreen)
+            }
+
+            Text("Stay on Track")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+
+            Text("Get notified about upcoming bills,\noverspending, and new pay periods.")
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Spacer()
+
+            Button {
+                requestNotificationPermission()
+            } label: {
+                Text("Enable Notifications")
+                    .font(.body)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(Color.brandGreen)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+            }
+            .padding(.horizontal, 24)
+
+            Button {
+                withAnimation { step = 6 }
+            } label: {
+                Text("Maybe Later")
+                    .font(.subheadline)
+                    .foregroundStyle(.gray)
+            }
+            .padding(.bottom, 40)
+        }
+    }
+
+    private func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .sound, .badge]
+        ) { _, _ in
+            DispatchQueue.main.async {
+                withAnimation { step = 6 }
+            }
+        }
+    }
+
+    // MARK: - Pro Paywall (Step 6)
+
+    private var proPaywallStep: some View {
+        ProPaywallView(onContinueFree: {
+            onComplete()
+        })
+        .ignoresSafeArea()
     }
 
     // MARK: - Helpers
@@ -1030,6 +1136,16 @@ struct OnboardingView: View {
 
     private func addDepositAccount() {
         guard !newDepositName.isEmpty else { return }
+        let checkingCount = depositAccounts.filter { $0.type == .checking }.count
+        let savingsCount = depositAccounts.filter { $0.type == .savings }.count
+        if newDepositType == .checking && !subscriptionManager.canCreateChecking(currentCount: checkingCount) {
+            showDepositLimitPaywall = true
+            return
+        }
+        if newDepositType == .savings && !subscriptionManager.canCreateSavings(currentCount: savingsCount) {
+            showDepositLimitPaywall = true
+            return
+        }
         let account = Account(name: newDepositName, type: newDepositType)
         modelContext.insert(account)
         newDepositName = ""

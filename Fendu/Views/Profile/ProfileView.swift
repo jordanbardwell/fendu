@@ -1,8 +1,10 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 struct ProfileView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(SubscriptionManager.self) private var subscriptionManager
     @Query private var configs: [PaycheckConfig]
     @Query private var accounts: [Account]
     @Query private var splits: [PaycheckSplit]
@@ -26,6 +28,15 @@ struct ProfileView: View {
     @State private var newDepositName = ""
     @State private var newDepositType: AccountType = .checking
     @State private var editingDepositAccount: Account? = nil
+    @State private var showProPaywall = false
+    @State private var showSplitPaywall = false
+
+    // Notification preferences
+    @State private var billReminders = NotificationPreferences.billRemindersEnabled
+    @State private var overspendingAlerts = NotificationPreferences.overspendingAlertsEnabled
+    @State private var paydayNotifications = NotificationPreferences.paydayNotificationsEnabled
+    @State private var systemNotificationsEnabled = true
+    @State private var notificationsNeverAsked = false
 
     private var depositAccounts: [Account] {
         accounts.filter { $0.type == .checking || $0.type == .savings }
@@ -35,6 +46,8 @@ struct ProfileView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 32) {
+                    proSectionCard
+                    notificationSettingsCard
                     paycheckSettingsCard
                     depositAccountsCard
                 }
@@ -68,6 +81,300 @@ struct ProfileView: View {
             }
             hasSplitsLoaded = true
         }
+        .task {
+            let settings = await UNUserNotificationCenter.current().notificationSettings()
+            systemNotificationsEnabled = settings.authorizationStatus == .authorized
+            notificationsNeverAsked = settings.authorizationStatus == .notDetermined
+        }
+    }
+
+    // MARK: - Pro Section Card
+
+    private var proSectionCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            if subscriptionManager.isPro {
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.brandGreen.opacity(0.25), Color.brandGreen.opacity(0.08)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 44, height: 44)
+                        Image(systemName: "crown.fill")
+                            .font(.system(size: 18))
+                            .foregroundStyle(Color.brandGreen)
+                    }
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(spacing: 6) {
+                            Text("Fendu Pro")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                            ProBadgeView()
+                        }
+                        Text(subscriptionManager.currentPlanName.map { "\($0) · Active" } ?? "Active")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                }
+
+                Button {
+                    if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                        UIApplication.shared.open(url)
+                    }
+                } label: {
+                    HStack {
+                        Text("Manage Subscription")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption2)
+                            .foregroundStyle(.gray.opacity(0.5))
+                    }
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 14)
+                    .background(Color(.systemGray6).opacity(0.5))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+            } else {
+                // Header
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.brandGreen.opacity(0.3), Color.brandGreen.opacity(0.08)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 44, height: 44)
+                        Image(systemName: "crown.fill")
+                            .font(.system(size: 18))
+                            .foregroundStyle(Color.brandGreen)
+                    }
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Fendu Pro")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        Text("Unlock the full experience")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                }
+
+                // Feature highlights
+                VStack(alignment: .leading, spacing: 10) {
+                    proFeatureRow(icon: "creditcard.fill", color: .blue, text: "Unlimited accounts")
+                    proFeatureRow(icon: "arrow.clockwise", color: Color.brandOrange, text: "Unlimited recurring bills")
+                    proFeatureRow(icon: "chart.pie.fill", color: .purple, text: "Deposit splits")
+                    proFeatureRow(icon: "arrow.down.left", color: Color.brandGreen, text: "Income tracking")
+                }
+                .padding(.vertical, 4)
+
+                // CTA
+                Button {
+                    showProPaywall = true
+                } label: {
+                    Text("Upgrade to Pro")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color.brandGreen)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+
+                // Restore
+                Button {
+                    Task { await subscriptionManager.restorePurchases() }
+                } label: {
+                    Text("Restore Purchases")
+                        .font(.caption)
+                        .foregroundStyle(.gray)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+        }
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .strokeBorder(
+                            subscriptionManager.isPro
+                                ? Color.brandGreen.opacity(0.2)
+                                : Color.clear,
+                            lineWidth: 1
+                        )
+                )
+        )
+        .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+        .sheet(isPresented: $showProPaywall) {
+            ProPaywallView()
+        }
+    }
+
+    private func proFeatureRow(icon: String, color: Color, text: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 13))
+                .foregroundStyle(color)
+                .frame(width: 24, height: 24)
+                .background(color.opacity(0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+            Text(text)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    // MARK: - Notification Settings Card
+
+    private var notificationSettingsCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(Color.brandGreen.opacity(0.12))
+                        .frame(width: 40, height: 40)
+                    Image(systemName: "bell.badge.fill")
+                        .font(.system(size: 18))
+                        .foregroundStyle(Color.brandGreen)
+                }
+                Text("Notifications")
+                    .font(.title3)
+                    .fontWeight(.bold)
+            }
+
+            if notificationsNeverAsked {
+                Button {
+                    UNUserNotificationCenter.current().requestAuthorization(
+                        options: [.alert, .sound, .badge]
+                    ) { granted, _ in
+                        DispatchQueue.main.async {
+                            systemNotificationsEnabled = granted
+                            notificationsNeverAsked = false
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "bell.badge.fill")
+                            .foregroundStyle(.white)
+                        Text("Enable Notifications")
+                            .font(.subheadline)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.white)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color.brandGreen)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            } else if !systemNotificationsEnabled {
+                HStack(spacing: 10) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(Color.brandOrange)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Notifications are disabled")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        Text("Enable in Settings to receive alerts")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button("Settings") {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color.brandGreen)
+                }
+                .padding(12)
+                .background(Color.brandOrange.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+
+            VStack(spacing: 0) {
+                notificationToggle(
+                    icon: "doc.text.fill",
+                    color: Color.brandOrange,
+                    title: "Bill Reminders",
+                    subtitle: "1 day before each paycheck",
+                    isOn: $billReminders
+                )
+                Divider().padding(.leading, 48)
+                notificationToggle(
+                    icon: "exclamationmark.circle.fill",
+                    color: .red,
+                    title: "Overspending Alerts",
+                    subtitle: "When 90% of paycheck is used",
+                    isOn: $overspendingAlerts
+                )
+                Divider().padding(.leading, 48)
+                notificationToggle(
+                    icon: "banknote.fill",
+                    color: Color.brandGreen,
+                    title: "Payday Notifications",
+                    subtitle: "When a new pay period starts",
+                    isOn: $paydayNotifications
+                )
+            }
+        }
+        .padding(20)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+        .onChange(of: billReminders) { _, new in
+            NotificationPreferences.billRemindersEnabled = new
+            if !new { NotificationScheduler.cancelAll() }
+        }
+        .onChange(of: overspendingAlerts) { _, new in
+            NotificationPreferences.overspendingAlertsEnabled = new
+            if !new { NotificationScheduler.cancelAll() }
+        }
+        .onChange(of: paydayNotifications) { _, new in
+            NotificationPreferences.paydayNotificationsEnabled = new
+            if !new { NotificationScheduler.cancelAll() }
+        }
+    }
+
+    private func notificationToggle(
+        icon: String, color: Color, title: String,
+        subtitle: String, isOn: Binding<Bool>
+    ) -> some View {
+        Toggle(isOn: isOn) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.system(size: 14))
+                    .foregroundStyle(color)
+                    .frame(width: 28, height: 28)
+                    .background(color.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(title)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    Text(subtitle)
+                        .font(.caption2)
+                        .foregroundStyle(.gray)
+                }
+            }
+        }
+        .tint(Color.brandGreen)
+        .padding(.vertical, 10)
+        .disabled(!systemNotificationsEnabled)
     }
 
     // MARK: - Paycheck Settings Card
@@ -371,7 +678,11 @@ struct ProfileView: View {
                 VStack(spacing: 8) {
                     ForEach(depositAccounts) { account in
                         Button {
-                            editingDepositAccount = account
+                            if !subscriptionManager.canSplitDeposits(depositCount: depositAccounts.count) {
+                                showSplitPaywall = true
+                            } else {
+                                editingDepositAccount = account
+                            }
                         } label: {
                             HStack(spacing: 12) {
                                 ZStack {
@@ -419,6 +730,9 @@ struct ProfileView: View {
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+        .sheet(isPresented: $showSplitPaywall) {
+            ProFeaturePaywallView(trigger: .depositSplits)
+        }
         .sheet(item: $editingDepositAccount) { account in
             let idStr = account.id.uuidString
             let paycheckAmt = Double(amount) ?? 0
@@ -505,6 +819,7 @@ struct ProfileView: View {
         }
         config.semiMonthlyDay1 = semiMonthlyDay1
         config.semiMonthlyDay2 = semiMonthlyDay2
+        WidgetReloader.reloadAll()
     }
 
     private func addDepositAccount() {
@@ -512,6 +827,7 @@ struct ProfileView: View {
         let account = Account(name: newDepositName, type: newDepositType)
         modelContext.insert(account)
         newDepositName = ""
+        WidgetReloader.reloadAll()
     }
 
     private func deleteDepositAccount(_ account: Account) {
@@ -562,5 +878,6 @@ struct ProfileView: View {
             modelContext.insert(split)
         }
         try? modelContext.save()
+        WidgetReloader.reloadAll()
     }
 }

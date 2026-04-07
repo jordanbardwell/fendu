@@ -12,6 +12,7 @@ private let paymentMethods = [
 
 struct AddTransactionSheet: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(SubscriptionManager.self) private var subscriptionManager
     @Environment(\.dismiss) private var dismiss
 
     let accounts: [Account]
@@ -42,6 +43,7 @@ struct AddTransactionSheet: View {
     @State private var selectedPaymentMethod: String?
     @State private var note = ""
     @State private var date = Date()
+    @State private var showIncomePaywall = false
 
     private var isPaymentMethodSelected: Bool {
         selectedPaymentMethod != nil
@@ -169,7 +171,15 @@ struct AddTransactionSheet: View {
                 selectedFundingAccount = fundingAccounts.first
             }
         }
+        .sheet(isPresented: $showIncomePaywall) {
+            ProFeaturePaywallView(trigger: .incomeTracking)
+        }
         .onChange(of: isIncomeMode) { _, income in
+            if income && !subscriptionManager.canTrackIncome() {
+                isIncomeMode = false
+                showIncomePaywall = true
+                return
+            }
             selectedAccount = income ? depositAccounts.first : selectableAccounts.first
             selectedPaymentMethod = nil
             selectedFundingAccount = showFundingPicker ? fundingAccounts.first : nil
@@ -414,6 +424,7 @@ struct AddTransactionSheet: View {
             )
             modelContext.insert(transaction)
         }
+        WidgetReloader.reloadAll()
         dismiss()
     }
 }

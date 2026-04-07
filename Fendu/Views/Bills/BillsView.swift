@@ -3,6 +3,7 @@ import SwiftData
 
 struct BillsView: View {
     @Environment(AppState.self) private var appState
+    @Environment(SubscriptionManager.self) private var subscriptionManager
     @Environment(\.modelContext) private var modelContext
     @Query private var accounts: [Account]
     @Query private var allBillAssignments: [BillAssignment]
@@ -11,6 +12,7 @@ struct BillsView: View {
 
     @State private var showCreateBill = false
     @State private var editingAssignment: BillAssignment?
+    @State private var showPaywall = false
 
     private var config: PaycheckConfig? { configs.first }
 
@@ -166,13 +168,20 @@ struct BillsView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        showCreateBill = true
+                        if subscriptionManager.canCreateBill(currentCount: allBillAssignments.count) {
+                            showCreateBill = true
+                        } else {
+                            showPaywall = true
+                        }
                     } label: {
                         Image(systemName: "plus")
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.brandGreen)
                     }
                 }
+            }
+            .sheet(isPresented: $showPaywall) {
+                ProFeaturePaywallView(trigger: .bills)
             }
             .sheet(isPresented: $showCreateBill) {
                 CreateBillSheet(
@@ -205,6 +214,7 @@ struct BillsView: View {
             modelContext.delete(account)
         }
         modelContext.delete(assignment)
+        WidgetReloader.reloadAll()
     }
 
     private func moveBillThisTime(_ assignment: BillAssignment, from currentId: String, to targetId: String) {
@@ -223,5 +233,6 @@ struct BillsView: View {
             fundingAccountId: assignment.fundingAccountId
         )
         modelContext.insert(oneTime)
+        WidgetReloader.reloadAll()
     }
 }

@@ -401,6 +401,7 @@ struct EditBillSheet: View {
             // One-time bill or no amount change — save directly
             assignment.amount = newAmount
             account?.balance = newAmount
+            WidgetReloader.reloadAll()
             dismiss()
         }
     }
@@ -410,6 +411,7 @@ struct EditBillSheet: View {
             modelContext.delete(account)
         }
         modelContext.delete(assignment)
+        WidgetReloader.reloadAll()
         dismiss()
     }
 }

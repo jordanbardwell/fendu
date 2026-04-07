@@ -282,6 +282,7 @@ struct CreateBillSheet: View {
             fundingAccountId: fundingId
         )
         modelContext.insert(assignment)
+        WidgetReloader.reloadAll()
         dismiss()
     }
 }

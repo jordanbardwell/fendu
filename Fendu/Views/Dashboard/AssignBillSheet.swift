@@ -310,6 +310,7 @@ struct AssignBillSheet: View {
             fundingAccountId: fundingId
         )
         modelContext.insert(assignment)
+        WidgetReloader.reloadAll()
         dismiss()
     }
 
@@ -330,6 +331,7 @@ struct AssignBillSheet: View {
             fundingAccountId: fundingId
         )
         modelContext.insert(assignment)
+        WidgetReloader.reloadAll()
         dismiss()
     }
 }

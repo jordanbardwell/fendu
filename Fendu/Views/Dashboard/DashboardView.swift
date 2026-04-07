@@ -22,6 +22,7 @@ enum AccountFormTarget: Identifiable {
 
 struct DashboardView: View {
     @Environment(AppState.self) private var appState
+    @Environment(SubscriptionManager.self) private var subscriptionManager
     @Environment(\.modelContext) private var modelContext
     @Query private var accounts: [Account]
     @Query private var allTransactions: [Transaction]
@@ -55,20 +56,16 @@ struct DashboardView: View {
     private var currentBillAssignments: [BillAssignment] {
         guard let id = appState.selectedPaycheckId,
               let freq = config?.frequency else { return [] }
-        let skippedIds = Set(
-            allBillSkips
-                .filter { $0.paycheckId == id }
-                .map { $0.billAssignmentId }
+        return BudgetCalculator.filteredBillAssignments(
+            paycheckId: id,
+            frequency: freq,
+            allAssignments: allBillAssignments,
+            allSkips: allBillSkips
         )
-        return allBillAssignments.filter {
-            $0.appliesTo(paycheckId: id, frequency: freq) && !skippedIds.contains($0.id.uuidString)
-        }
     }
 
     private func effectiveAmount(for assignment: BillAssignment, paycheckId: String) -> Double {
-        allBillOverrides.first(where: {
-            $0.billAssignmentId == assignment.id.uuidString && $0.paycheckId == paycheckId
-        })?.overrideAmount ?? assignment.amount
+        BudgetCalculator.effectiveAmount(for: assignment, paycheckId: paycheckId, overrides: allBillOverrides)
     }
 
     private var totalBills: Double {
@@ -235,6 +232,8 @@ struct DashboardView: View {
     @State private var accountFormTarget: AccountFormTarget?
     @State private var editingTransaction: Transaction?
     @State private var editingBillAssignment: BillAssignment?
+    @State private var showProPaywall = false
+    @State private var proPaywallTrigger: ProFeaturePaywallView.Trigger = .accountLimit
 
     var body: some View {
         @Bindable var appState = appState
@@ -295,7 +294,15 @@ struct DashboardView: View {
                     currentPaycheckId: appState.selectedPaycheckId ?? "",
                     isDone: currentPaycheckIsDone,
                     onUnassign: unassignBill,
-                    onAssign: { appState.selectedTab = 1 },
+                    onAssign: {
+                        let billCount = allBillAssignments.count
+                        if subscriptionManager.canCreateBill(currentCount: billCount) {
+                            appState.selectedTab = 1
+                        } else {
+                            proPaywallTrigger = .bills
+                            showProPaywall = true
+                        }
+                    },
                     onReassign: reassignBill,
                     onMoveThisTime: moveBillThisTime,
                     onOverrideAmount: createBillOverride,
@@ -330,7 +337,13 @@ struct DashboardView: View {
                             .foregroundStyle(.primary)
                         Spacer()
                         Button {
-                            accountFormTarget = .new
+                            let accountCount = accounts.filter({ $0.type == .credit || $0.type == .other }).count
+                            if subscriptionManager.canCreateAccount(currentCount: accountCount) {
+                                accountFormTarget = .new
+                            } else {
+                                proPaywallTrigger = .accountLimit
+                                showProPaywall = true
+                            }
                         } label: {
                             HStack(spacing: 4) {
                                 Image(systemName: "plus")
@@ -385,6 +398,9 @@ struct DashboardView: View {
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(40)
             }
+            .sheet(isPresented: $showProPaywall) {
+                ProFeaturePaywallView(trigger: proPaywallTrigger)
+            }
             .sheet(item: $editingBillAssignment) { assignment in
                 EditBillSheet(
                     assignment: assignment,
@@ -405,9 +421,13 @@ struct DashboardView: View {
         }
         .onAppear {
             appState.selectInitialPaycheck(instances: paycheckInstances)
+            scheduleNotificationsIfNeeded()
         }
         .onChange(of: paycheckInstances) { _, newInstances in
             appState.selectInitialPaycheck(instances: newInstances)
+        }
+        .onChange(of: totalAllocated) { _, _ in
+            scheduleNotificationsIfNeeded()
         }
     }
 
@@ -418,14 +438,17 @@ struct DashboardView: View {
             let status = PaycheckStatus(paycheckId: paycheckId, isDone: true)
             modelContext.insert(status)
         }
+        WidgetReloader.reloadAll()
     }
 
     private func deleteTransaction(_ transaction: Transaction) {
         modelContext.delete(transaction)
+        WidgetReloader.reloadAll()
     }
 
     private func deleteAccount(_ account: Account) {
         modelContext.delete(account)
+        WidgetReloader.reloadAll()
     }
 
     private func unassignBill(_ assignment: BillAssignment) {
@@ -434,6 +457,7 @@ struct DashboardView: View {
             modelContext.delete(override)
         }
         modelContext.delete(assignment)
+        WidgetReloader.reloadAll()
     }
 
     private func createBillOverride(_ assignment: BillAssignment, paycheckId: String, amount: Double) {
@@ -448,10 +472,12 @@ struct DashboardView: View {
             overrideAmount: amount
         )
         modelContext.insert(override)
+        WidgetReloader.reloadAll()
     }
 
     private func reassignBill(_ assignment: BillAssignment, to newPaycheckId: String) {
         assignment.paycheckId = newPaycheckId
+        WidgetReloader.reloadAll()
     }
 
     private func moveBillThisTime(_ assignment: BillAssignment, from currentId: String, to targetId: String) {
@@ -469,5 +495,40 @@ struct DashboardView: View {
             fundingAccountId: assignment.fundingAccountId
         )
         modelContext.insert(oneTime)
+        WidgetReloader.reloadAll()
+    }
+
+    // MARK: - Notification Scheduling
+
+    private func scheduleNotificationsIfNeeded() {
+        guard let config else { return }
+
+        // Always use the CURRENT active paycheck, not the selected/viewed one
+        guard let snapshot = BudgetCalculator.currentSnapshot(
+            config: config,
+            allTransactions: allTransactions,
+            allBillAssignments: allBillAssignments,
+            allBillSkips: allBillSkips,
+            allBillOverrides: allBillOverrides,
+            paycheckStatuses: paycheckStatuses
+        ) else { return }
+
+        let currentId = PaycheckGenerator.currentPaycheckId(
+            from: PaycheckGenerator.generateInstances(from: config)
+        ) ?? ""
+
+        let activeBills = BudgetCalculator.filteredBillAssignments(
+            paycheckId: currentId,
+            frequency: config.frequency,
+            allAssignments: allBillAssignments,
+            allSkips: allBillSkips
+        )
+
+        let bills: [(name: String, amount: Double)] = activeBills.map { assignment in
+            let name = accounts.first { $0.id.uuidString == assignment.billAccountId }?.name ?? "Bill"
+            return (name, BudgetCalculator.effectiveAmount(for: assignment, paycheckId: currentId, overrides: allBillOverrides))
+        }
+
+        NotificationScheduler.rescheduleAll(snapshot: snapshot, billDetails: bills)
     }
 }

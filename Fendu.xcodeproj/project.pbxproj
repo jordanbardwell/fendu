@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -46,7 +46,65 @@
 		AA000039001 /* DepositAccountEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000039001 /* DepositAccountEditSheet.swift */; };
 		AA000040001 /* EditTransactionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000040001 /* EditTransactionSheet.swift */; };
 		AA000041001 /* BillAmountOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000041001 /* BillAmountOverride.swift */; };
+		AA000042001 /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000042001 /* SubscriptionManager.swift */; };
+		AA000043001 /* ProBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000043001 /* ProBadgeView.swift */; };
+		AA000044001 /* ProPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000044001 /* ProPaywallView.swift */; };
+		AA000045001 /* ProFeaturePaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000045001 /* ProFeaturePaywallView.swift */; };
+		AA000046001 /* SharedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000046001 /* SharedContainer.swift */; };
+		AA000047001 /* StoreMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000047001 /* StoreMigrator.swift */; };
+		AA000048001 /* BudgetCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000048001 /* BudgetCalculator.swift */; };
+		AA000049001 /* WidgetReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000049001 /* WidgetReloader.swift */; };
+		AA000050001 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000050001 /* LiveActivityManager.swift */; };
+		AA000051001 /* FenduLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000051001 /* FenduLiveActivityAttributes.swift */; };
+		AA000052001 /* NotificationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000052001 /* NotificationPreferences.swift */; };
+		AA000053001 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000053001 /* NotificationScheduler.swift */; };
+		BB000001001 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005001 /* Account.swift */; };
+		BB000002001 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009001 /* Transaction.swift */; };
+		BB000003001 /* PaycheckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007001 /* PaycheckConfig.swift */; };
+		BB000004001 /* PaycheckInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000008001 /* PaycheckInstance.swift */; };
+		BB000005001 /* PaycheckStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000025001 /* PaycheckStatus.swift */; };
+		BB000006001 /* BillAssignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000026001 /* BillAssignment.swift */; };
+		BB000007001 /* BillSkip.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000031001 /* BillSkip.swift */; };
+		BB000008001 /* BillAmountOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000041001 /* BillAmountOverride.swift */; };
+		BB000009001 /* PaycheckSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000037001 /* PaycheckSplit.swift */; };
+		BB000010001 /* PaycheckGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000010001 /* PaycheckGenerator.swift */; };
+		BB000011001 /* BudgetCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000048001 /* BudgetCalculator.swift */; };
+		BB000012001 /* SharedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000046001 /* SharedContainer.swift */; };
+		BB000013001 /* FenduLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000051001 /* FenduLiveActivityAttributes.swift */; };
+		BB000014001 /* Color+Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000002001 /* Color+Brand.swift */; };
+		BB000015001 /* Double+Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000004001 /* Double+Currency.swift */; };
+		BB000016001 /* Date+Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000003001 /* Date+Formatting.swift */; };
+		BB000017001 /* CreditCardCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000023001 /* CreditCardCatalog.swift */; };
+		DA7B25532F849DC8004648C8 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7B25522F849DC8004648C8 /* WidgetKit.framework */; };
+		DA7B25552F849DC8004648C8 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7B25542F849DC8004648C8 /* SwiftUI.framework */; };
+		DA7B25662F849DC9004648C8 /* FenduWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DA7B25512F849DC8004648C8 /* FenduWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DA7B56552F83736A009DED2E /* FenduPro.storekit in Resources */ = {isa = PBXBuildFile; fileRef = DA7B56542F83736A009DED2E /* FenduPro.storekit */; };
+		DAAD3F6C2F832843006C0677 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD3F6B2F832843006C0677 /* StoreKit.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DA7B25642F849DC9004648C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0000001001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA7B25502F849DC8004648C8;
+			remoteInfo = FenduWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DA7B25672F849DC9004648C8 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				DA7B25662F849DC9004648C8 /* FenduWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AB000001001 /* Fendu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fendu.swift; sourceTree = "<group>"; };
@@ -89,14 +147,58 @@
 		AB000039001 /* DepositAccountEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositAccountEditSheet.swift; sourceTree = "<group>"; };
 		AB000040001 /* EditTransactionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionSheet.swift; sourceTree = "<group>"; };
 		AB000041001 /* BillAmountOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillAmountOverride.swift; sourceTree = "<group>"; };
+		AB000042001 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
+		AB000043001 /* ProBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProBadgeView.swift; sourceTree = "<group>"; };
+		AB000044001 /* ProPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPaywallView.swift; sourceTree = "<group>"; };
+		AB000045001 /* ProFeaturePaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProFeaturePaywallView.swift; sourceTree = "<group>"; };
+		AB000046001 /* SharedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedContainer.swift; sourceTree = "<group>"; };
+		AB000047001 /* StoreMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreMigrator.swift; sourceTree = "<group>"; };
+		AB000048001 /* BudgetCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCalculator.swift; sourceTree = "<group>"; };
+		AB000049001 /* WidgetReloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetReloader.swift; sourceTree = "<group>"; };
+		AB000050001 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
+		AB000051001 /* FenduLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FenduLiveActivityAttributes.swift; sourceTree = "<group>"; };
+		AB000052001 /* NotificationPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferences.swift; sourceTree = "<group>"; };
+		AB000053001 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
 		AC000001001 /* Fendu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fendu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA7B254C2F847A3F004648C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DA7B25512F849DC8004648C8 /* FenduWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FenduWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA7B25522F849DC8004648C8 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		DA7B25542F849DC8004648C8 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		DA7B25912F849E83004648C8 /* FenduWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FenduWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
+		DA7B25CE2F84A957004648C8 /* FenduWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FenduWidgetExtension.entitlements; sourceTree = "<group>"; };
+		DA7B56542F83736A009DED2E /* FenduPro.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = FenduPro.storekit; sourceTree = "<group>"; };
+		DAAD3F6B2F832843006C0677 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DA7B256A2F849DC9004648C8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DA7B25502F849DC8004648C8 /* FenduWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		DA7B25562F849DC8004648C8 /* FenduWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (DA7B256A2F849DC9004648C8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = FenduWidget; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		AD000001001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAAD3F6C2F832843006C0677 /* StoreKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA7B254E2F849DC8004648C8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA7B25552F849DC8004648C8 /* SwiftUI.framework in Frameworks */,
+				DA7B25532F849DC8004648C8 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,7 +208,12 @@
 		AE000001001 = {
 			isa = PBXGroup;
 			children = (
+				DA7B25CE2F84A957004648C8 /* FenduWidgetExtension.entitlements */,
+				DA7B25912F849E83004648C8 /* FenduWidgetExtensionDebug.entitlements */,
+				DA7B56542F83736A009DED2E /* FenduPro.storekit */,
 				AE000002001 /* Fendu */,
+				DA7B25562F849DC8004648C8 /* FenduWidget */,
+				DAAD3F6A2F832843006C0677 /* Frameworks */,
 				AE000003001 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -114,6 +221,7 @@
 		AE000002001 /* Fendu */ = {
 			isa = PBXGroup;
 			children = (
+				DA7B254C2F847A3F004648C8 /* Info.plist */,
 				AB000001001 /* Fendu.swift */,
 				AB000024001 /* Fendu.entitlements */,
 				AB000022001 /* Assets.xcassets */,
@@ -130,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				AC000001001 /* Fendu.app */,
+				DA7B25512F849DC8004648C8 /* FenduWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -155,6 +264,15 @@
 			isa = PBXGroup;
 			children = (
 				AB000010001 /* PaycheckGenerator.swift */,
+				AB000042001 /* SubscriptionManager.swift */,
+				AB000046001 /* SharedContainer.swift */,
+				AB000047001 /* StoreMigrator.swift */,
+				AB000048001 /* BudgetCalculator.swift */,
+				AB000049001 /* WidgetReloader.swift */,
+				AB000050001 /* LiveActivityManager.swift */,
+				AB000051001 /* FenduLiveActivityAttributes.swift */,
+				AB000052001 /* NotificationPreferences.swift */,
+				AB000053001 /* NotificationScheduler.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -189,6 +307,7 @@
 				AE000014001 /* Profile */,
 				AE000015001 /* Onboarding */,
 				AE000016001 /* Shared */,
+				AE000017001 /* Subscription */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -270,6 +389,26 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
+		AE000017001 /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				AB000043001 /* ProBadgeView.swift */,
+				AB000044001 /* ProPaywallView.swift */,
+				AB000045001 /* ProFeaturePaywallView.swift */,
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
+		DAAD3F6A2F832843006C0677 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DAAD3F6B2F832843006C0677 /* StoreKit.framework */,
+				DA7B25522F849DC8004648C8 /* WidgetKit.framework */,
+				DA7B25542F849DC8004648C8 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -280,15 +419,39 @@
 				AF000002001 /* Sources */,
 				AD000001001 /* Frameworks */,
 				AF000003001 /* Resources */,
+				DA7B25672F849DC9004648C8 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DA7B25652F849DC9004648C8 /* PBXTargetDependency */,
 			);
 			name = Fendu;
 			productName = BalanceBookGold;
 			productReference = AC000001001 /* Fendu.app */;
 			productType = "com.apple.product-type.application";
+		};
+		DA7B25502F849DC8004648C8 /* FenduWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA7B256B2F849DC9004648C8 /* Build configuration list for PBXNativeTarget "FenduWidgetExtension" */;
+			buildPhases = (
+				DA7B254D2F849DC8004648C8 /* Sources */,
+				DA7B254E2F849DC8004648C8 /* Frameworks */,
+				DA7B254F2F849DC8004648C8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				DA7B25562F849DC8004648C8 /* FenduWidget */,
+			);
+			name = FenduWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = FenduWidgetExtension;
+			productReference = DA7B25512F849DC8004648C8 /* FenduWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -297,11 +460,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1540;
+				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					AF000001001 = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					DA7B25502F849DC8004648C8 = {
+						CreatedOnToolsVersion = 26.4;
 					};
 				};
 			};
@@ -319,6 +485,7 @@
 			projectRoot = "";
 			targets = (
 				AF000001001 /* Fendu */,
+				DA7B25502F849DC8004648C8 /* FenduWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -329,6 +496,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA000022001 /* Assets.xcassets in Resources */,
+				DA7B56552F83736A009DED2E /* FenduPro.storekit in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA7B254F2F849DC8004648C8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,10 +552,54 @@
 				AA000039001 /* DepositAccountEditSheet.swift in Sources */,
 				AA000040001 /* EditTransactionSheet.swift in Sources */,
 				AA000041001 /* BillAmountOverride.swift in Sources */,
+				AA000042001 /* SubscriptionManager.swift in Sources */,
+				AA000043001 /* ProBadgeView.swift in Sources */,
+				AA000044001 /* ProPaywallView.swift in Sources */,
+				AA000045001 /* ProFeaturePaywallView.swift in Sources */,
+				AA000046001 /* SharedContainer.swift in Sources */,
+				AA000047001 /* StoreMigrator.swift in Sources */,
+				AA000048001 /* BudgetCalculator.swift in Sources */,
+				AA000049001 /* WidgetReloader.swift in Sources */,
+				AA000050001 /* LiveActivityManager.swift in Sources */,
+				AA000051001 /* FenduLiveActivityAttributes.swift in Sources */,
+				AA000052001 /* NotificationPreferences.swift in Sources */,
+				AA000053001 /* NotificationScheduler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA7B254D2F849DC8004648C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB000001001 /* Account.swift in Sources */,
+				BB000002001 /* Transaction.swift in Sources */,
+				BB000003001 /* PaycheckConfig.swift in Sources */,
+				BB000004001 /* PaycheckInstance.swift in Sources */,
+				BB000005001 /* PaycheckStatus.swift in Sources */,
+				BB000006001 /* BillAssignment.swift in Sources */,
+				BB000007001 /* BillSkip.swift in Sources */,
+				BB000008001 /* BillAmountOverride.swift in Sources */,
+				BB000009001 /* PaycheckSplit.swift in Sources */,
+				BB000010001 /* PaycheckGenerator.swift in Sources */,
+				BB000011001 /* BudgetCalculator.swift in Sources */,
+				BB000012001 /* SharedContainer.swift in Sources */,
+				BB000013001 /* FenduLiveActivityAttributes.swift in Sources */,
+				BB000014001 /* Color+Brand.swift in Sources */,
+				BB000015001 /* Double+Currency.swift in Sources */,
+				BB000016001 /* Date+Formatting.swift in Sources */,
+				BB000017001 /* CreditCardCatalog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DA7B25652F849DC9004648C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA7B25502F849DC8004648C8 /* FenduWidgetExtension */;
+			targetProxy = DA7B25642F849DC9004648C8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B2000001001 /* Debug */ = {
@@ -516,6 +735,7 @@
 				DEVELOPMENT_TEAM = 465YW8KC93;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Fendu/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Fendu;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -550,6 +770,7 @@
 				DEVELOPMENT_TEAM = 465YW8KC93;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Fendu/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Fendu;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -572,6 +793,71 @@
 			};
 			name = Release;
 		};
+		DA7B25682F849DC9004648C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = FenduWidgetExtensionDebug.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 465YW8KC93;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FenduWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FenduWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jordanbardwell.Fendu.FenduWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DA7B25692F849DC9004648C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = FenduWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 465YW8KC93;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FenduWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FenduWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jordanbardwell.Fendu.FenduWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -589,6 +875,15 @@
 			buildConfigurations = (
 				B2000001001 /* Debug */,
 				B2000002001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA7B256B2F849DC9004648C8 /* Build configuration list for PBXNativeTarget "FenduWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA7B25682F849DC9004648C8 /* Debug */,
+				DA7B25692F849DC9004648C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
