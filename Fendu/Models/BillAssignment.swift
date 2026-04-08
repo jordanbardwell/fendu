@@ -118,7 +118,7 @@ final class BillAssignment {
     }
 
     /// Check if this bill applies to a given paycheck based on recurrence
-    func appliesTo(paycheckId targetId: String, frequency: PayFrequency) -> Bool {
+    func appliesTo(paycheckId targetId: String, frequency: PayFrequency, semiMonthlyDay1: Int = 1, semiMonthlyDay2: Int = 15) -> Bool {
         // Direct match always applies
         if paycheckId == targetId { return true }
 
@@ -152,10 +152,11 @@ final class BillAssignment {
             let targetYear = calendar.component(.year, from: targetDay)
             let targetMonth = calendar.component(.month, from: targetDay)
             let targetDayIdx = calendar.component(.day, from: targetDay)
-            // Each month has 2 pay periods (index 0 and 1 within the month)
-            // Approximate which half each falls in: day <= 15 → first half, else second
-            let anchorHalf = anchorDayIdx <= 15 ? 0 : 1
-            let targetHalf = targetDayIdx <= 15 ? 0 : 1
+            // Determine which half (0 or 1) by proximity to the configured pay days
+            let d1 = min(semiMonthlyDay1, semiMonthlyDay2)
+            let d2 = max(semiMonthlyDay1, semiMonthlyDay2)
+            let anchorHalf = abs(anchorDayIdx - d1) <= abs(anchorDayIdx - d2) ? 0 : 1
+            let targetHalf = abs(targetDayIdx - d1) <= abs(targetDayIdx - d2) ? 0 : 1
             let monthDiff = (targetYear - anchorYear) * 12 + (targetMonth - anchorMonth)
             periods = monthDiff * 2 + (targetHalf - anchorHalf)
         case .monthly:

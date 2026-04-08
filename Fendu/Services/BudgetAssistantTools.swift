@@ -14,7 +14,7 @@ struct GetCurrentPaycheckTool: Tool {
     @Generable
     struct Arguments { }
 
-    func call(arguments: Arguments) async throws -> String {
+    @MainActor func call(arguments: Arguments) async throws -> String {
         dataProvider.currentPaycheckSummary()
     }
 }
@@ -31,7 +31,7 @@ struct GetTransactionsTool: Tool {
     @Generable
     struct Arguments { }
 
-    func call(arguments: Arguments) async throws -> String {
+    @MainActor func call(arguments: Arguments) async throws -> String {
         dataProvider.recentTransactions()
     }
 }
@@ -48,7 +48,7 @@ struct GetAccountsTool: Tool {
     @Generable
     struct Arguments { }
 
-    func call(arguments: Arguments) async throws -> String {
+    @MainActor func call(arguments: Arguments) async throws -> String {
         dataProvider.accountsSummary()
     }
 }
@@ -65,7 +65,7 @@ struct GetBillScheduleTool: Tool {
     @Generable
     struct Arguments { }
 
-    func call(arguments: Arguments) async throws -> String {
+    @MainActor func call(arguments: Arguments) async throws -> String {
         dataProvider.billSchedule()
     }
 }
@@ -85,7 +85,7 @@ struct GetPaycheckHistoryTool: Tool {
         var count: Int
     }
 
-    func call(arguments: Arguments) async throws -> String {
+    @MainActor func call(arguments: Arguments) async throws -> String {
         dataProvider.paycheckHistory(count: arguments.count)
     }
 }

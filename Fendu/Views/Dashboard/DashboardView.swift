@@ -63,7 +63,9 @@ struct DashboardView: View {
             paycheckId: id,
             frequency: freq,
             allAssignments: allBillAssignments,
-            allSkips: allBillSkips
+            allSkips: allBillSkips,
+            semiMonthlyDay1: config?.semiMonthlyDay1 ?? 1,
+            semiMonthlyDay2: config?.semiMonthlyDay2 ?? 15
         )
     }
 
@@ -214,7 +216,7 @@ struct DashboardView: View {
                     .map { $0.billAssignmentId }
             )
             let bills = allBillAssignments
-                .filter { $0.appliesTo(paycheckId: instance.id, frequency: freq) && !skippedIds.contains($0.id.uuidString) }
+                .filter { $0.appliesTo(paycheckId: instance.id, frequency: freq, semiMonthlyDay1: config?.semiMonthlyDay1 ?? 1, semiMonthlyDay2: config?.semiMonthlyDay2 ?? 15) && !skippedIds.contains($0.id.uuidString) }
                 .reduce(0.0) { $0 + effectiveAmount(for: $1, paycheckId: instance.id) }
             let total = allocated + bills
             let progress = instance.baseAmount > 0
@@ -573,7 +575,9 @@ struct DashboardView: View {
             paycheckId: currentId,
             frequency: config.frequency,
             allAssignments: allBillAssignments,
-            allSkips: allBillSkips
+            allSkips: allBillSkips,
+            semiMonthlyDay1: config.semiMonthlyDay1,
+            semiMonthlyDay2: config.semiMonthlyDay2
         )
 
         let bills: [(name: String, amount: Double)] = activeBills.map { assignment in

@@ -35,7 +35,9 @@ struct BudgetCalculator {
             paycheckId: currentId,
             frequency: config.frequency,
             allAssignments: allBillAssignments,
-            allSkips: allBillSkips
+            allSkips: allBillSkips,
+            semiMonthlyDay1: config.semiMonthlyDay1,
+            semiMonthlyDay2: config.semiMonthlyDay2
         )
         let totalBills = bills.reduce(0) {
             $0 + effectiveAmount(for: $1, paycheckId: currentId, overrides: allBillOverrides)
@@ -75,7 +77,9 @@ struct BudgetCalculator {
         paycheckId: String,
         frequency: PayFrequency,
         allAssignments: [BillAssignment],
-        allSkips: [BillSkip]
+        allSkips: [BillSkip],
+        semiMonthlyDay1: Int = 1,
+        semiMonthlyDay2: Int = 15
     ) -> [BillAssignment] {
         let skippedIds = Set(
             allSkips
@@ -83,7 +87,7 @@ struct BudgetCalculator {
                 .map { $0.billAssignmentId }
         )
         return allAssignments.filter {
-            $0.appliesTo(paycheckId: paycheckId, frequency: frequency)
+            $0.appliesTo(paycheckId: paycheckId, frequency: frequency, semiMonthlyDay1: semiMonthlyDay1, semiMonthlyDay2: semiMonthlyDay2)
                 && !skippedIds.contains($0.id.uuidString)
         }
     }

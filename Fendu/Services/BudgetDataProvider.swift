@@ -97,7 +97,9 @@ struct BudgetDataProvider {
             paycheckId: id,
             frequency: config.frequency,
             allAssignments: allBillAssignments,
-            allSkips: allBillSkips
+            allSkips: allBillSkips,
+            semiMonthlyDay1: config.semiMonthlyDay1,
+            semiMonthlyDay2: config.semiMonthlyDay2
         )
 
         var currentTotal = 0.0
@@ -122,7 +124,9 @@ struct BudgetDataProvider {
                 paycheckId: next.id,
                 frequency: config.frequency,
                 allAssignments: allBillAssignments,
-                allSkips: allBillSkips
+                allSkips: allBillSkips,
+                semiMonthlyDay1: config.semiMonthlyDay1,
+                semiMonthlyDay2: config.semiMonthlyDay2
             )
 
             var nextTotal = 0.0
@@ -161,7 +165,9 @@ struct BudgetDataProvider {
                 paycheckId: instance.id,
                 frequency: config.frequency,
                 allAssignments: allBillAssignments,
-                allSkips: allBillSkips
+                allSkips: allBillSkips,
+                semiMonthlyDay1: config.semiMonthlyDay1,
+                semiMonthlyDay2: config.semiMonthlyDay2
             )
             let billTotal = bills.reduce(0.0) {
                 $0 + BudgetCalculator.effectiveAmount(for: $1, paycheckId: instance.id, overrides: allBillOverrides)
