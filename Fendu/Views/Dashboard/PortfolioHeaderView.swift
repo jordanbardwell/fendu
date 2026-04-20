@@ -18,6 +18,8 @@ struct PortfolioHeaderView: View {
     var totalAllocated: Double = 0
     var totalBills: Double = 0
     var splitBreakdown: [SplitBreakdownItem] = []
+    var isOverridden: Bool = false
+    var onEditAmount: (() -> Void)? = nil
 
     private var percentage: Double {
         guard paycheckAmount > 0 else { return 0 }
@@ -26,6 +28,13 @@ struct PortfolioHeaderView: View {
 
     private var showBreakdown: Bool {
         splitBreakdown.count > 1
+    }
+
+    private var amountLabel: some View {
+        Text("From \(paycheckAmount.asCurrencyWhole())")
+            .font(.caption)
+            .fontWeight(.medium)
+            .foregroundStyle(isOverridden ? Color.brandGreen : .gray.opacity(0.7))
     }
 
     var body: some View {
@@ -38,6 +47,30 @@ struct PortfolioHeaderView: View {
                     .font(.subheadline)
                     .fontWeight(.medium)
                     .foregroundStyle(.gray)
+
+                if let onEditAmount {
+                    Button {
+                        onEditAmount()
+                    } label: {
+                        HStack(spacing: 3) {
+                            Image(systemName: "pencil")
+                                .font(.system(size: 9, weight: .bold))
+                            Text(isOverridden ? "Custom" : "Edit")
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(
+                            isOverridden
+                                ? Color.brandGreen.opacity(0.15)
+                                : Color(.systemGray5)
+                        )
+                        .foregroundStyle(isOverridden ? Color.brandGreen : .gray)
+                        .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
 
                 if isDone {
                     Text("Done")
@@ -69,15 +102,40 @@ struct PortfolioHeaderView: View {
                 .foregroundStyle(remainingBalance >= 0 ? Color.brandGreen : Color.brandOrange)
 
                 if totalBills > 0 {
-                    Text("Bills: \(totalBills.asCurrencyWhole()) · Spent: \(totalAllocated.asCurrencyWhole())")
+                    Group {
+                        if let onEditAmount {
+                            Button {
+                                onEditAmount()
+                            } label: {
+                                amountLabel
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            amountLabel
+                        }
+                    }
+
+                    Text("· Bills: \(totalBills.asCurrencyWhole()) · Spent: \(totalAllocated.asCurrencyWhole())")
                         .font(.caption)
                         .fontWeight(.medium)
                         .foregroundStyle(.gray.opacity(0.7))
                 } else {
-                    Text("Remaining from \(paycheckAmount.asCurrencyWhole())")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.gray.opacity(0.7))
+                    if let onEditAmount {
+                        Button {
+                            onEditAmount()
+                        } label: {
+                            Text("Remaining from \(paycheckAmount.asCurrencyWhole())")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.gray.opacity(0.7))
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        Text("Remaining from \(paycheckAmount.asCurrencyWhole())")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.gray.opacity(0.7))
+                    }
                 }
             }
             .opacity(isDone ? 0.4 : 1)

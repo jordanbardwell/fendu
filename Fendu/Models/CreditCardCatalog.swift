@@ -110,6 +110,7 @@ struct CreditCardCatalog {
             "Altitude Connect",
             "Cash+",
             "Platinum",
+            "Shield",
             "Shopper Cash Rewards"
         ]),
         CardIssuer(name: "Wells Fargo", cards: [

@@ -35,6 +35,9 @@ struct DashboardView: View {
     @Query private var allBillSkips: [BillSkip]
     @Query private var allBillOverrides: [BillAmountOverride]
     @Query private var splits: [PaycheckSplit]
+    @Query private var allBillPayments: [BillPayment]
+    @Query private var allTransactionPayments: [TransactionPayment]
+    @Query private var allPaycheckOverrides: [PaycheckAmountOverride]
 
     private var config: PaycheckConfig? { configs.first }
 
@@ -45,6 +48,20 @@ struct DashboardView: View {
 
     private var currentPaycheck: PaycheckInstance? {
         paycheckInstances.first { $0.id == appState.selectedPaycheckId }
+    }
+
+    private func effectiveAmount(for instance: PaycheckInstance) -> Double {
+        BudgetCalculator.effectivePaycheckAmount(for: instance, overrides: allPaycheckOverrides)
+    }
+
+    private var currentEffectiveAmount: Double {
+        guard let paycheck = currentPaycheck else { return config?.amount ?? 0 }
+        return effectiveAmount(for: paycheck)
+    }
+
+    private var isPaycheckOverridden: Bool {
+        guard let id = appState.selectedPaycheckId else { return false }
+        return allPaycheckOverrides.contains { $0.paycheckId == id }
     }
 
     private var currentTransactions: [Transaction] {
@@ -102,7 +119,7 @@ struct DashboardView: View {
         guard let split = splits.first(where: { $0.accountId == accountId }) else { return 0 }
         if split.isRemainder {
             let fixedTotal = splits.filter { !$0.isRemainder }.reduce(0) { $0 + $1.amount }
-            return (currentPaycheck?.baseAmount ?? 0) - fixedTotal
+            return currentEffectiveAmount - fixedTotal
         }
         return split.amount
     }
@@ -144,12 +161,16 @@ struct DashboardView: View {
     private func billItems(for assignments: [BillAssignment], paycheckId: String) -> [FundingBillItem] {
         assignments.map { assignment in
             let name = accounts.first { $0.id.uuidString == assignment.billAccountId }?.name ?? "Unknown Bill"
+            let paid = allBillPayments.contains {
+                $0.billAssignmentId == assignment.id.uuidString && $0.paycheckId == paycheckId
+            }
             return FundingBillItem(
                 id: assignment.id.uuidString,
                 billName: name,
                 amount: effectiveAmount(for: assignment, paycheckId: paycheckId),
                 recurrence: assignment.recurrence,
-                isSavings: assignment.isSavings
+                isSavings: assignment.isSavings,
+                isPaid: paid
             )
         }
     }
@@ -196,7 +217,7 @@ struct DashboardView: View {
     }
 
     private var remainingBalance: Double {
-        (currentPaycheck?.baseAmount ?? 0) - totalAllocated - totalBills
+        currentEffectiveAmount - totalAllocated - totalBills
     }
 
     private var currentPaycheckIsDone: Bool {
@@ -219,8 +240,9 @@ struct DashboardView: View {
                 .filter { $0.appliesTo(paycheckId: instance.id, frequency: freq, semiMonthlyDay1: config?.semiMonthlyDay1 ?? 1, semiMonthlyDay2: config?.semiMonthlyDay2 ?? 15) && !skippedIds.contains($0.id.uuidString) }
                 .reduce(0.0) { $0 + effectiveAmount(for: $1, paycheckId: instance.id) }
             let total = allocated + bills
-            let progress = instance.baseAmount > 0
-                ? min(max(total / instance.baseAmount, 0), 1.0)
+            let effectiveAmt = effectiveAmount(for: instance)
+            let progress = effectiveAmt > 0
+                ? min(max(total / effectiveAmt, 0), 1.0)
                 : 0
             let isDone = paycheckStatuses
                 .first { $0.paycheckId == instance.id }?.isDone ?? false
@@ -239,6 +261,8 @@ struct DashboardView: View {
     @State private var editingBillAssignment: BillAssignment?
     @State private var showProPaywall = false
     @State private var proPaywallTrigger: ProFeaturePaywallView.Trigger = .accountLimit
+    @State private var showAmountOverride = false
+    @State private var overrideAmountText = ""
 
     // AI Insight (iOS 26+ only)
     #if canImport(FoundationModels)
@@ -279,12 +303,17 @@ struct DashboardView: View {
                 Section {
                     PortfolioHeaderView(
                         remainingBalance: remainingBalance,
-                        paycheckAmount: config?.amount ?? 0,
+                        paycheckAmount: currentEffectiveAmount,
                         paycheckDate: currentPaycheck?.date,
                         isDone: currentPaycheckIsDone,
                         totalAllocated: totalAllocated,
                         totalBills: totalBills,
-                        splitBreakdown: splitBreakdown
+                        splitBreakdown: splitBreakdown,
+                        isOverridden: isPaycheckOverridden,
+                        onEditAmount: {
+                            overrideAmountText = String(format: "%.2f", currentEffectiveAmount)
+                            showAmountOverride = true
+                        }
                     )
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
@@ -317,6 +346,15 @@ struct DashboardView: View {
                     onEditBill: { billId in
                         editingBillAssignment = currentBillAssignments.first { $0.id.uuidString == billId }
                     },
+                    onToggleBillPaid: { billId in
+                        if let assignment = currentBillAssignments.first(where: { $0.id.uuidString == billId }) {
+                            toggleBillPaid(assignment, paycheckId: appState.selectedPaycheckId ?? "")
+                        }
+                    },
+                    transactionPayments: allTransactionPayments,
+                    onToggleTransactionPaid: { tx in
+                        toggleTransactionPaid(tx)
+                    },
                     fundingSections: fundingSections
                 )
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
@@ -342,7 +380,11 @@ struct DashboardView: View {
                     onMoveThisTime: moveBillThisTime,
                     onOverrideAmount: createBillOverride,
                     fundingAccounts: fundingAccounts,
-                    billOverrides: allBillOverrides
+                    billOverrides: allBillOverrides,
+                    billPayments: allBillPayments,
+                    onTogglePaid: { assignment in
+                        toggleBillPaid(assignment, paycheckId: appState.selectedPaycheckId ?? "")
+                    }
                 )
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
 
@@ -454,6 +496,23 @@ struct DashboardView: View {
                 .presentationCornerRadius(40)
             }
         }
+        .alert("Override Paycheck Amount", isPresented: $showAmountOverride) {
+            TextField("Amount", text: $overrideAmountText)
+                .keyboardType(.decimalPad)
+            Button("Save") {
+                if let amount = Double(overrideAmountText), amount > 0 {
+                    savePaycheckOverride(amount: amount)
+                }
+            }
+            if isPaycheckOverridden {
+                Button("Reset to Default", role: .destructive) {
+                    resetPaycheckOverride()
+                }
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Default: \(config?.amount.asCurrency() ?? "$0")")
+        }
         .onAppear {
             appState.selectInitialPaycheck(instances: paycheckInstances)
             scheduleNotificationsIfNeeded()
@@ -470,7 +529,9 @@ struct DashboardView: View {
                         allBillSkips: allBillSkips,
                         allBillOverrides: allBillOverrides,
                         paycheckStatuses: paycheckStatuses,
-                        splits: splits
+                        splits: splits,
+                        allBillPayments: allBillPayments,
+                        allPaycheckOverrides: allPaycheckOverrides
                     )
                     await insightViewModel.generateIfNeeded(provider: provider, currentPaycheckId: currentId)
                 }
@@ -492,6 +553,53 @@ struct DashboardView: View {
             let status = PaycheckStatus(paycheckId: paycheckId, isDone: true)
             modelContext.insert(status)
         }
+        WidgetReloader.reloadAll()
+    }
+
+    private func toggleBillPaid(_ assignment: BillAssignment, paycheckId: String) {
+        if let existing = allBillPayments.first(where: {
+            $0.billAssignmentId == assignment.id.uuidString && $0.paycheckId == paycheckId
+        }) {
+            modelContext.delete(existing)
+        } else {
+            let payment = BillPayment(billAssignmentId: assignment.id.uuidString, paycheckId: paycheckId)
+            modelContext.insert(payment)
+        }
+    }
+
+    private func isTransactionPaid(_ transaction: Transaction) -> Bool {
+        allTransactionPayments.contains {
+            $0.transactionId == transaction.id.uuidString && $0.paycheckId == transaction.paycheckId
+        }
+    }
+
+    private func toggleTransactionPaid(_ transaction: Transaction) {
+        if let existing = allTransactionPayments.first(where: {
+            $0.transactionId == transaction.id.uuidString && $0.paycheckId == transaction.paycheckId
+        }) {
+            modelContext.delete(existing)
+        } else {
+            let payment = TransactionPayment(transactionId: transaction.id.uuidString, paycheckId: transaction.paycheckId)
+            modelContext.insert(payment)
+        }
+    }
+
+    private func savePaycheckOverride(amount: Double) {
+        guard let id = appState.selectedPaycheckId else { return }
+        if let existing = allPaycheckOverrides.first(where: { $0.paycheckId == id }) {
+            existing.overrideAmount = amount
+        } else {
+            let override = PaycheckAmountOverride(paycheckId: id, overrideAmount: amount)
+            modelContext.insert(override)
+        }
+        WidgetReloader.reloadAll()
+    }
+
+    private func resetPaycheckOverride() {
+        guard let id = appState.selectedPaycheckId,
+              let existing = allPaycheckOverrides.first(where: { $0.paycheckId == id })
+        else { return }
+        modelContext.delete(existing)
         WidgetReloader.reloadAll()
     }
 
@@ -564,7 +672,8 @@ struct DashboardView: View {
             allBillAssignments: allBillAssignments,
             allBillSkips: allBillSkips,
             allBillOverrides: allBillOverrides,
-            paycheckStatuses: paycheckStatuses
+            paycheckStatuses: paycheckStatuses,
+            allPaycheckOverrides: allPaycheckOverrides
         ) else { return }
 
         let currentId = PaycheckGenerator.currentPaycheckId(

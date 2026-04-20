@@ -11,6 +11,8 @@ struct BudgetDataProvider {
     let allBillOverrides: [BillAmountOverride]
     let paycheckStatuses: [PaycheckStatus]
     let splits: [PaycheckSplit]
+    let allBillPayments: [BillPayment]
+    let allPaycheckOverrides: [PaycheckAmountOverride]
 
     // MARK: - Derived Helpers
 
@@ -111,8 +113,9 @@ struct BudgetDataProvider {
                 let name = accounts.first { $0.id.uuidString == bill.billAccountId }?.name ?? "Unknown"
                 let amount = BudgetCalculator.effectiveAmount(for: bill, paycheckId: id, overrides: allBillOverrides)
                 let category = bill.category.displayName
+                let paid = allBillPayments.contains { $0.billAssignmentId == bill.id.uuidString && $0.paycheckId == id }
                 currentTotal += amount
-                result += "- \(name): \(amount.asCurrency()) [\(category)] (\(bill.recurrence.shortLabel))\n"
+                result += "- \(name): \(amount.asCurrency()) [\(category)] (\(bill.recurrence.shortLabel))\(paid ? " [PAID]" : "")\n"
             }
             result += "Current paycheck bills total: \(currentTotal.asCurrency())\n"
         }
@@ -173,10 +176,11 @@ struct BudgetDataProvider {
                 $0 + BudgetCalculator.effectiveAmount(for: $1, paycheckId: instance.id, overrides: allBillOverrides)
             }
 
-            let remaining = instance.baseAmount - allocated - billTotal
+            let effectiveAmt = BudgetCalculator.effectivePaycheckAmount(for: instance, overrides: allPaycheckOverrides)
+            let remaining = effectiveAmt - allocated - billTotal
             let isDone = paycheckStatuses.first { $0.paycheckId == instance.id }?.isDone ?? false
 
-            return "\(label) (\(instance.date.formattedShortMonthDay())): \(instance.baseAmount.asCurrency()) paycheck, \(allocated.asCurrency()) spent, \(billTotal.asCurrency()) bills, \(remaining.asCurrency()) remaining\(isDone ? " (done)" : "")"
+            return "\(label) (\(instance.date.formattedShortMonthDay())): \(effectiveAmt.asCurrency()) paycheck, \(allocated.asCurrency()) spent, \(billTotal.asCurrency()) bills, \(remaining.asCurrency()) remaining\(isDone ? " (done)" : "")"
         }
 
         return lines.joined(separator: "\n")

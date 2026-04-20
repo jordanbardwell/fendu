@@ -13,6 +13,8 @@ struct BillsSectionView: View {
     var onOverrideAmount: ((BillAssignment, String, Double) -> Void)? = nil
     var fundingAccounts: [Account] = []
     var billOverrides: [BillAmountOverride] = []
+    var billPayments: [BillPayment] = []
+    var onTogglePaid: ((BillAssignment) -> Void)? = nil
 
     @State private var editingAssignment: BillAssignment?
 
@@ -34,6 +36,16 @@ struct BillsSectionView: View {
         billOverrides.first(where: {
             $0.billAssignmentId == assignment.id.uuidString && $0.paycheckId == currentPaycheckId
         })?.overrideAmount
+    }
+
+    private func isPaid(_ assignment: BillAssignment) -> Bool {
+        billPayments.contains {
+            $0.billAssignmentId == assignment.id.uuidString && $0.paycheckId == currentPaycheckId
+        }
+    }
+
+    private var paidCount: Int {
+        billAssignments.filter { isPaid($0) }.count
     }
 
     var body: some View {
@@ -67,6 +79,10 @@ struct BillsSectionView: View {
                             },
                             onMoveThisTime: { targetId in
                                 onMoveThisTime?(assignment, currentPaycheckId, targetId)
+                            },
+                            isPaid: isPaid(assignment),
+                            onTogglePaid: {
+                                onTogglePaid?(assignment)
                             }
                         )
                     }
@@ -92,6 +108,24 @@ struct BillsSectionView: View {
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundStyle(.primary)
+
+                if !billAssignments.isEmpty && paidCount > 0 {
+                    HStack(spacing: 3) {
+                        if paidCount == billAssignments.count {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 9))
+                        }
+                        Text("\(paidCount)/\(billAssignments.count) paid")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                    }
+                    .foregroundStyle(Color.brandGreen)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.brandGreen.opacity(0.15))
+                    .clipShape(Capsule())
+                }
+
                 Spacer()
 
                 if isDone {

@@ -14,6 +14,8 @@ struct ChatView: View {
     @Query private var allBillSkips: [BillSkip]
     @Query private var allBillOverrides: [BillAmountOverride]
     @Query private var splits: [PaycheckSplit]
+    @Query private var allBillPayments: [BillPayment]
+    @Query private var allPaycheckOverrides: [PaycheckAmountOverride]
 
     @State private var viewModel = ChatViewModel()
     @State private var showProPaywall = false
@@ -30,7 +32,9 @@ struct ChatView: View {
             allBillSkips: allBillSkips,
             allBillOverrides: allBillOverrides,
             paycheckStatuses: paycheckStatuses,
-            splits: splits
+            splits: splits,
+            allBillPayments: allBillPayments,
+            allPaycheckOverrides: allPaycheckOverrides
         )
     }
 

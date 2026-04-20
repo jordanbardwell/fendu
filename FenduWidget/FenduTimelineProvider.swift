@@ -73,6 +73,7 @@ struct FenduTimelineProvider: TimelineProvider {
         let billSkips = fetchAll(BillSkip.self, in: context)
         let billOverrides = fetchAll(BillAmountOverride.self, in: context)
         let statuses = fetchAll(PaycheckStatus.self, in: context)
+        let paycheckOverrides = fetchAll(PaycheckAmountOverride.self, in: context)
 
         let snapshot = BudgetCalculator.currentSnapshot(
             config: config,
@@ -80,7 +81,8 @@ struct FenduTimelineProvider: TimelineProvider {
             allBillAssignments: billAssignments,
             allBillSkips: billSkips,
             allBillOverrides: billOverrides,
-            paycheckStatuses: statuses
+            paycheckStatuses: statuses,
+            allPaycheckOverrides: paycheckOverrides
         )
 
         return FenduEntry(date: Date(), snapshot: snapshot)

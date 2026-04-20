@@ -6,6 +6,7 @@ struct FundingBillItem: Identifiable {
     let amount: Double
     let recurrence: BillRecurrence
     var isSavings: Bool = false
+    var isPaid: Bool = false
 }
 
 struct FundingSectionData: Identifiable {
@@ -25,7 +26,16 @@ struct AllocationsListView: View {
     let onToggleDone: () -> Void
     var onEdit: ((Transaction) -> Void)? = nil
     var onEditBill: ((String) -> Void)? = nil
+    var onToggleBillPaid: ((String) -> Void)? = nil
+    var transactionPayments: [TransactionPayment] = []
+    var onToggleTransactionPaid: ((Transaction) -> Void)? = nil
     var fundingSections: [FundingSectionData] = []
+
+    private func isTransactionPaid(_ tx: Transaction) -> Bool {
+        transactionPayments.contains {
+            $0.transactionId == tx.id.uuidString && $0.paycheckId == tx.paycheckId
+        }
+    }
 
     private var showGrouped: Bool {
         !fundingSections.isEmpty
@@ -126,7 +136,11 @@ struct AllocationsListView: View {
                     } label: {
                         TransactionRowView(
                             transaction: tx,
-                            accountName: tx.displayName
+                            accountName: tx.displayName,
+                            isPaid: isTransactionPaid(tx),
+                            onTogglePaid: tx.account?.type == .credit && !tx.isIncome ? {
+                                onToggleTransactionPaid?(tx)
+                            } : nil
                         )
                     }
                     .buttonStyle(.plain)
@@ -168,43 +182,56 @@ struct AllocationsListView: View {
             // Bills assigned to this funding account
             ForEach(section.bills) { bill in
                 let tint: Color = bill.isSavings ? .blue : Color.brandOrange
-                Button {
-                    if !isDone { onEditBill?(bill.id) }
-                } label: {
-                    HStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    // Tappable circle — toggles paid status
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            onToggleBillPaid?(bill.id)
+                        }
+                    } label: {
                         ZStack {
                             Circle()
-                                .fill(tint.opacity(0.12))
+                                .fill(bill.isPaid ? Color.brandGreen.opacity(0.15) : tint.opacity(0.12))
                                 .frame(width: 40, height: 40)
-                            Image(systemName: bill.isSavings ? "arrow.down.to.line" : "doc.text.fill")
-                                .font(.system(size: 16))
-                                .foregroundStyle(tint)
-                        }
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(bill.billName)
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                            Text(bill.recurrence.shortLabel)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundStyle(tint.opacity(0.7))
-                        }
-
-                        Spacer()
-
-                        VStack(alignment: .trailing, spacing: 2) {
-                            Text("-\(bill.amount.asCurrency())")
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                            Text(bill.isSavings ? "SAVINGS" : "BILL")
-                                .font(.system(size: 9, weight: .bold))
-                                .foregroundStyle(tint.opacity(0.6))
-                                .tracking(1.5)
+                            Image(systemName: bill.isPaid ? "checkmark.circle.fill" : (bill.isSavings ? "arrow.down.to.line" : "doc.text.fill"))
+                                .font(.system(size: bill.isPaid ? 22 : 16))
+                                .foregroundStyle(bill.isPaid ? Color.brandGreen : tint)
                         }
                     }
+                    .buttonStyle(.plain)
+
+                    // Rest of row — tappable for edit
+                    Button {
+                        if !isDone { onEditBill?(bill.id) }
+                    } label: {
+                        HStack(spacing: 0) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(bill.billName)
+                                    .font(.subheadline)
+                                    .fontWeight(.bold)
+                                    .opacity(bill.isPaid ? 0.6 : 1)
+                                Text(bill.recurrence.shortLabel)
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(tint.opacity(bill.isPaid ? 0.4 : 0.7))
+                            }
+
+                            Spacer()
+
+                            VStack(alignment: .trailing, spacing: 2) {
+                                Text("-\(bill.amount.asCurrency())")
+                                    .font(.subheadline)
+                                    .fontWeight(.bold)
+                                    .opacity(bill.isPaid ? 0.6 : 1)
+                                Text(bill.isPaid ? (bill.isSavings ? "SAVED" : "PAID") : (bill.isSavings ? "SAVINGS" : "BILL"))
+                                    .font(.system(size: 9, weight: .bold))
+                                    .foregroundStyle(bill.isPaid ? Color.brandGreen.opacity(0.7) : tint.opacity(0.6))
+                                    .tracking(1.5)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
                 .padding(.vertical, 4)
                 .listRowSeparator(.hidden)
             }
@@ -223,7 +250,11 @@ struct AllocationsListView: View {
                     } label: {
                         TransactionRowView(
                             transaction: tx,
-                            accountName: tx.displayName
+                            accountName: tx.displayName,
+                            isPaid: isTransactionPaid(tx),
+                            onTogglePaid: tx.account?.type == .credit && !tx.isIncome ? {
+                                onToggleTransactionPaid?(tx)
+                            } : nil
                         )
                     }
                     .buttonStyle(.plain)

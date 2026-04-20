@@ -20,7 +20,10 @@ enum SharedContainer {
             BillAssignment.self,
             BillSkip.self,
             BillAmountOverride.self,
-            PaycheckSplit.self
+            BillPayment.self,
+            TransactionPayment.self,
+            PaycheckSplit.self,
+            PaycheckAmountOverride.self
         ])
         let config = ModelConfiguration(
             "BalanceBookGold",

@@ -21,7 +21,8 @@ struct BudgetCalculator {
         allBillAssignments: [BillAssignment],
         allBillSkips: [BillSkip],
         allBillOverrides: [BillAmountOverride],
-        paycheckStatuses: [PaycheckStatus]
+        paycheckStatuses: [PaycheckStatus],
+        allPaycheckOverrides: [PaycheckAmountOverride] = []
     ) -> BudgetSnapshot? {
         let instances = PaycheckGenerator.generateInstances(from: config)
         guard let currentId = PaycheckGenerator.currentPaycheckId(from: instances),
@@ -43,7 +44,8 @@ struct BudgetCalculator {
             $0 + effectiveAmount(for: $1, paycheckId: currentId, overrides: allBillOverrides)
         }
 
-        let remaining = current.baseAmount - totalAllocated - totalBills
+        let paycheckAmount = effectivePaycheckAmount(for: current, overrides: allPaycheckOverrides)
+        let remaining = paycheckAmount - totalAllocated - totalBills
         let isDone = paycheckStatuses.first(where: { $0.paycheckId == currentId })?.isDone ?? false
 
         // Find next paycheck
@@ -61,7 +63,7 @@ struct BudgetCalculator {
 
         return BudgetSnapshot(
             paycheckDate: current.date,
-            paycheckAmount: current.baseAmount,
+            paycheckAmount: paycheckAmount,
             remainingBalance: remaining,
             totalAllocated: totalAllocated,
             totalBills: totalBills,
@@ -69,6 +71,14 @@ struct BudgetCalculator {
             daysUntilNextPaycheck: max(0, daysUntilNext),
             isDone: isDone
         )
+    }
+
+    static func effectivePaycheckAmount(
+        for instance: PaycheckInstance,
+        overrides: [PaycheckAmountOverride]
+    ) -> Double {
+        overrides.first(where: { $0.paycheckId == instance.id })?.overrideAmount
+            ?? instance.baseAmount
     }
 
     // MARK: - Shared Helpers (used by DashboardView too)

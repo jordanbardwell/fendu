@@ -11,6 +11,8 @@ struct BillRowView: View {
     let currentPaycheckId: String
     let onReassign: (String) -> Void
     var onMoveThisTime: ((String) -> Void)? = nil
+    var isPaid: Bool = false
+    var onTogglePaid: (() -> Void)? = nil
 
     @State private var showReassign = false
     @State private var showMoveThisTime = false
@@ -26,19 +28,29 @@ struct BillRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(tint.opacity(0.12))
-                    .frame(width: 40, height: 40)
-                Image(systemName: isSavings ? "arrow.down.to.line" : "doc.text")
-                    .font(.system(size: 16))
-                    .foregroundStyle(tint)
+            // Tappable circle — toggles paid status
+            Button {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                    onTogglePaid?()
+                }
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(isPaid ? Color.brandGreen.opacity(0.15) : tint.opacity(0.12))
+                        .frame(width: 40, height: 40)
+                    Image(systemName: isPaid ? "checkmark.circle.fill" : (isSavings ? "arrow.down.to.line" : "doc.text"))
+                        .font(.system(size: isPaid ? 22 : 16))
+                        .foregroundStyle(isPaid ? Color.brandGreen : tint)
+                }
             }
+            .buttonStyle(.plain)
+            .sensoryFeedback(.success, trigger: isPaid)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(billName)
                     .font(.subheadline)
                     .fontWeight(.bold)
+                    .opacity(isPaid ? 0.6 : 1)
                 HStack(spacing: 4) {
                     Image(systemName: recurrence == .once ? "1.circle" : "arrow.clockwise")
                         .font(.system(size: 9))
@@ -46,7 +58,7 @@ struct BillRowView: View {
                         .font(.caption)
                         .fontWeight(.medium)
                 }
-                .foregroundStyle(tint.opacity(0.7))
+                .foregroundStyle(tint.opacity(isPaid ? 0.4 : 0.7))
             }
 
             Spacer()
@@ -62,31 +74,33 @@ struct BillRowView: View {
                 Text("-\(amount.asCurrency())")
                     .font(.subheadline)
                     .fontWeight(.bold)
-                    .foregroundStyle(hasOverride ? Color.brandOrange : .primary)
-                Text(isSavings ? "SAVINGS" : (hasOverride ? "ADJUSTED" : "BILL"))
+                    .foregroundStyle(isPaid ? .primary.opacity(0.6) : (hasOverride ? Color.brandOrange : .primary))
+                Text(isPaid ? (isSavings ? "SAVED" : "PAID") : (isSavings ? "SAVINGS" : (hasOverride ? "ADJUSTED" : "BILL")))
                     .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(tint.opacity(0.7))
+                    .foregroundStyle(isPaid ? Color.brandGreen.opacity(0.7) : tint.opacity(0.7))
                     .tracking(1.5)
             }
 
-            // Move button — different behavior for one-time vs recurring
-            if recurrence != .once || isRecurringInstance {
-                Button {
-                    showMoveThisTime = true
-                } label: {
-                    Image(systemName: "arrow.uturn.right")
-                        .font(.caption)
-                        .foregroundStyle(Color.brandOrange.opacity(0.5))
-                        .padding(8)
-                }
-            } else if recurrence == .once {
-                Button {
-                    showReassign = true
-                } label: {
-                    Image(systemName: "arrow.left.arrow.right")
-                        .font(.caption)
-                        .foregroundStyle(.gray.opacity(0.5))
-                        .padding(8)
+            // Move button — hidden when paid
+            if !isPaid {
+                if recurrence != .once || isRecurringInstance {
+                    Button {
+                        showMoveThisTime = true
+                    } label: {
+                        Image(systemName: "arrow.uturn.right")
+                            .font(.caption)
+                            .foregroundStyle(Color.brandOrange.opacity(0.5))
+                            .padding(8)
+                    }
+                } else if recurrence == .once {
+                    Button {
+                        showReassign = true
+                    } label: {
+                        Image(systemName: "arrow.left.arrow.right")
+                            .font(.caption)
+                            .foregroundStyle(.gray.opacity(0.5))
+                            .padding(8)
+                    }
                 }
             }
         }

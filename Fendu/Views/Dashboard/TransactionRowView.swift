@@ -16,6 +16,8 @@ struct TransactionRowView: View {
     let transaction: Transaction
     let accountName: String
     var fundingAccountName: String? = nil
+    var isPaid: Bool = false
+    var onTogglePaid: (() -> Void)? = nil
 
     private var iconName: String {
         if transaction.isIncome {
@@ -40,6 +42,9 @@ struct TransactionRowView: View {
     }
 
     private var typeLabel: String {
+        if isPaid {
+            return "PAID"
+        }
         if transaction.isIncome {
             return "INCOME"
         } else if transaction.isPaymentMethod {
@@ -50,21 +55,32 @@ struct TransactionRowView: View {
         return "ALLOCATED"
     }
 
+    /// Whether this transaction supports paid tracking (credit card payments)
+    private var supportsPaidToggle: Bool {
+        onTogglePaid != nil && transaction.account?.type == .credit && !transaction.isIncome
+    }
+
     var body: some View {
         HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(tintColor.opacity(0.12))
-                    .frame(width: 40, height: 40)
-                Image(systemName: iconName)
-                    .font(.system(size: 16))
-                    .foregroundStyle(tintColor)
+            if supportsPaidToggle {
+                Button {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        onTogglePaid?()
+                    }
+                } label: {
+                    paidCircle
+                }
+                .buttonStyle(.plain)
+                .sensoryFeedback(.success, trigger: isPaid)
+            } else {
+                paidCircle
             }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(accountName)
                     .font(.subheadline)
                     .fontWeight(.bold)
+                    .opacity(isPaid ? 0.6 : 1)
                 if let fundingName = fundingAccountName {
                     Text("from \(fundingName)")
                         .font(.system(size: 10))
@@ -74,7 +90,7 @@ struct TransactionRowView: View {
                 Text(transaction.note.isEmpty ? "No note" : transaction.note)
                     .font(.caption)
                     .fontWeight(.medium)
-                    .foregroundStyle(.gray.opacity(0.7))
+                    .foregroundStyle(.gray.opacity(isPaid ? 0.4 : 0.7))
             }
 
             Spacer()
@@ -85,12 +101,24 @@ struct TransactionRowView: View {
                     : "-\(transaction.amount.asCurrency())")
                     .font(.subheadline)
                     .fontWeight(.bold)
+                    .opacity(isPaid ? 0.6 : 1)
                 Text(typeLabel)
                     .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(tintColor.opacity(0.6))
+                    .foregroundStyle(isPaid ? Color.brandGreen.opacity(0.7) : tintColor.opacity(0.6))
                     .tracking(1.5)
             }
         }
         .padding(.vertical, 4)
+    }
+
+    private var paidCircle: some View {
+        ZStack {
+            Circle()
+                .fill(isPaid ? Color.brandGreen.opacity(0.15) : tintColor.opacity(0.12))
+                .frame(width: 40, height: 40)
+            Image(systemName: isPaid ? "checkmark.circle.fill" : iconName)
+                .font(.system(size: isPaid ? 22 : 16))
+                .foregroundStyle(isPaid ? Color.brandGreen : tintColor)
+        }
     }
 }
