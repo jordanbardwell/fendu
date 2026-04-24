@@ -11,8 +11,6 @@ struct ProFeaturePaywallView: View {
     @State private var isPurchasing = false
     @State private var errorMessage: String?
 
-    enum PlanChoice { case yearly, monthly }
-
     enum Trigger: String {
         case accountLimit = "Unlimited Accounts"
         case depositLimit = "More Deposit Accounts"
@@ -68,15 +66,6 @@ struct ProFeaturePaywallView: View {
 
     private var selectedProduct: Product? {
         selectedPlan == .yearly ? subscriptionManager.yearlyProduct : subscriptionManager.monthlyProduct
-    }
-
-    private var pricingSummary: String {
-        switch selectedPlan {
-        case .yearly:
-            return "7 days free, then \(subscriptionManager.yearlyProduct?.displayPrice ?? "$29.99")/yr"
-        case .monthly:
-            return "7 days free, then \(subscriptionManager.monthlyProduct?.displayPrice ?? "$3.99")/mo"
-        }
     }
 
     var body: some View {
@@ -144,22 +133,16 @@ struct ProFeaturePaywallView: View {
                 .padding(.horizontal, 24)
                 .padding(.bottom, 24)
 
-                // Plan toggle
-                HStack(spacing: 0) {
-                    planToggleButton("Yearly", plan: .yearly)
-                    planToggleButton("Monthly", plan: .monthly)
-                }
-                .background(Color(.systemGray5))
-                .clipShape(Capsule())
-                .padding(.horizontal, 60)
-                .padding(.bottom, 12)
-
-                // Pricing summary
-                Text(pricingSummary)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(Color.brandGreen)
-                    .padding(.bottom, 16)
+                // Pricing cards
+                PricingCardPair(
+                    selectedPlan: $selectedPlan,
+                    monthlyPrice: subscriptionManager.monthlyProduct?.displayPrice ?? "$3.99",
+                    yearlyPrice: subscriptionManager.yearlyProduct?.displayPrice ?? "$29.99",
+                    yearlyMonthly: "$2.50/mo",
+                    savingsLabel: "SAVE 37%"
+                )
+                .padding(.horizontal, 24)
+                .padding(.bottom, 16)
 
                 // Error message
                 if let errorMessage {
@@ -175,7 +158,7 @@ struct ProFeaturePaywallView: View {
                 Button {
                     Task { await handlePurchase() }
                 } label: {
-                    Text(isPurchasing ? "Processing..." : "Start for $0.00")
+                    Text(isPurchasing ? "Processing..." : "Start 7-day free trial")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -215,22 +198,6 @@ struct ProFeaturePaywallView: View {
             if subscriptionManager.products.isEmpty {
                 await subscriptionManager.loadProducts()
             }
-        }
-    }
-
-    private func planToggleButton(_ label: String, plan: PlanChoice) -> some View {
-        Button {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                selectedPlan = plan
-            }
-        } label: {
-            Text(label)
-                .font(.system(size: 14, weight: selectedPlan == plan ? .semibold : .regular))
-                .foregroundStyle(selectedPlan == plan ? .white : .gray)
-                .frame(maxWidth: .infinity)
-                .frame(height: 34)
-                .background(selectedPlan == plan ? Color(.systemGray3) : .clear)
-                .clipShape(Capsule())
         }
     }
 

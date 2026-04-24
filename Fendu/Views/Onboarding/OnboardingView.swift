@@ -26,6 +26,7 @@ struct OnboardingView: View {
     @State private var showDatePicker = false
     @State private var semiMonthlyDay1 = 1
     @State private var semiMonthlyDay2 = 15
+    @FocusState private var amountFieldFocused: Bool
 
     // Deposit account setup
     @State private var newDepositName = ""
@@ -56,13 +57,48 @@ struct OnboardingView: View {
     }
 
     private var progress: CGFloat {
-        CGFloat(step + 8) / 12.0
+        CGFloat(step + 8) / 13.0
+    }
+
+    private var formattedAmountDisplay: some View {
+        let raw = paycheckAmount
+        let value = Double(raw) ?? 0
+
+        return HStack(alignment: .firstTextBaseline, spacing: 0) {
+            if raw.isEmpty {
+                Text("$0")
+                    .font(.system(size: 48, weight: .black))
+                    .tracking(-1.5)
+                    .foregroundStyle(.gray.opacity(0.3))
+            } else {
+                let intPart = Int(value)
+                let formatted = NumberFormatter.localizedString(from: NSNumber(value: intPart), number: .decimal)
+                Text("$\(formatted)")
+                    .font(.system(size: 48, weight: .black))
+                    .tracking(-1.5)
+                    .foregroundStyle(.primary)
+
+                // Show .00 cents in gray
+                let cents = value - Double(intPart)
+                if cents > 0 {
+                    Text(String(format: ".%02d", Int(round(cents * 100))))
+                        .font(.system(size: 48, weight: .black))
+                        .tracking(-1.5)
+                        .foregroundStyle(.gray.opacity(0.35))
+                } else {
+                    Text(".00")
+                        .font(.system(size: 48, weight: .black))
+                        .tracking(-1.5)
+                        .foregroundStyle(.gray.opacity(0.35))
+                }
+            }
+        }
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            // Progress bar (matches questionnaire style, continues from 8/12)
-            if step < 5 {
+            // Progress bar (matches questionnaire style, continues from 8/13)
+            if step < 6 {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         Capsule()
@@ -92,6 +128,8 @@ struct OnboardingView: View {
             case 4:
                 notificationStep
             case 5:
+                previewStep
+            case 6:
                 proPaywallStep
             default:
                 EmptyView()
@@ -113,10 +151,15 @@ struct OnboardingView: View {
     private var paycheckStep: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Set Up Your Paycheck")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text("We'll use this to generate your pay periods.")
+                Text("Step 01 · Paycheck")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(1.2)
+                    .foregroundStyle(.gray)
+                    .textCase(.uppercase)
+                Text("What do you take home?")
+                    .font(.system(size: 34, weight: .bold))
+                    .tracking(-0.5)
+                Text("After tax, after 401(k). The amount that actually lands in your account.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -124,29 +167,41 @@ struct OnboardingView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("BASE AMOUNT")
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("AMOUNT")
                             .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(.gray.opacity(0.7))
                             .tracking(1.5)
 
-                        HStack {
-                            Text("$")
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .foregroundStyle(.gray.opacity(0.5))
+                        VStack(alignment: .leading, spacing: 0) {
+                            formattedAmountDisplay
+                                .padding(.bottom, 4)
+
                             TextField("0", text: $paycheckAmount)
-                                .font(.title3)
-                                .fontWeight(.bold)
+                                .focused($amountFieldFocused)
                                 .keyboardType(.decimalPad)
+                                .font(.system(size: 1))
+                                .foregroundStyle(.clear)
+                                .tint(.clear)
+                                .frame(height: 1)
+                                .opacity(0.01)
                         }
-                        .padding(16)
+                        .padding(20)
                         .background(Color(.systemGray6))
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(.systemGray4), lineWidth: 1)
+                                .stroke(
+                                    !paycheckAmount.isEmpty && (Double(paycheckAmount) ?? 0) > 0
+                                        ? Color.brandGreen
+                                        : Color(.systemGray4),
+                                    lineWidth: !paycheckAmount.isEmpty && (Double(paycheckAmount) ?? 0) > 0 ? 1.5 : 1
+                                )
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            amountFieldFocused = true
+                        }
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -155,31 +210,31 @@ struct OnboardingView: View {
                             .foregroundStyle(.gray.opacity(0.7))
                             .tracking(1.5)
 
-                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                            ForEach(PayFrequency.allCases) { freq in
-                                Button {
-                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                        frequency = freq
+                        HStack(spacing: 6) {
+                                ForEach(PayFrequency.allCases) { freq in
+                                    Button {
+                                        amountFieldFocused = false
+                                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                            frequency = freq
+                                        }
+                                    } label: {
+                                        Text(freq.displayName)
+                                            .font(.system(size: 13, weight: .bold))
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 12)
+                                            .background(
+                                                frequency == freq
+                                                    ? Color.brandGreen
+                                                    : Color(.systemGray6)
+                                            )
+                                            .foregroundStyle(
+                                                frequency == freq
+                                                    ? .white
+                                                    : .gray
+                                            )
+                                            .clipShape(Capsule())
                                     }
-                                } label: {
-                                    Text(freq.displayName)
-                                        .font(.caption)
-                                        .fontWeight(.bold)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 14)
-                                        .background(
-                                            frequency == freq
-                                                ? Color.brandGreen
-                                                : Color(.systemGray6)
-                                        )
-                                        .foregroundStyle(
-                                            frequency == freq
-                                                ? .white
-                                                : .gray
-                                        )
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
                                 }
-                            }
                         }
                     }
 
@@ -204,7 +259,7 @@ struct OnboardingView: View {
                                 .tracking(1.5)
 
                             Button {
-                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                amountFieldFocused = false
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
                                     showDatePicker.toggle()
                                 }
@@ -242,7 +297,7 @@ struct OnboardingView: View {
                 .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
                 .padding(.horizontal, 24)
             }
-            .scrollDismissesKeyboard(.interactively)
+            .scrollDismissesKeyboard(.immediately)
 
             Spacer(minLength: 0)
 
@@ -250,7 +305,7 @@ struct OnboardingView: View {
                 savePaycheckConfig()
                 withAnimation { step = 1 }
             } label: {
-                Text("Next")
+                Text("Continue")
                     .font(.body)
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
@@ -288,10 +343,15 @@ struct OnboardingView: View {
 
         return VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Deposit Accounts")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text("Where does your \(paycheckAmt.asCurrency()) paycheck go? Add your checking & savings accounts.")
+                Text("Step 02 · Split it")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(1.2)
+                    .foregroundStyle(.gray)
+                    .textCase(.uppercase)
+                Text("Where does it actually go?")
+                    .font(.system(size: 34, weight: .bold))
+                    .tracking(-0.5)
+                Text("Tell Fendu which accounts the paycheck lands in. You can split one deposit across many.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -339,66 +399,73 @@ struct OnboardingView: View {
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
             .padding(.horizontal, 24)
+            .sheet(isPresented: $showDepositLimitPaywall) {
+                ProPaywallView()
+            }
 
             ScrollView {
                 VStack(spacing: 0) {
-                    if depositAccounts.isEmpty {
-                        VStack(spacing: 12) {
-                            Spacer()
-                            Image(systemName: "building.columns")
-                                .font(.system(size: 32))
-                                .foregroundStyle(.gray.opacity(0.4))
-                            Text("No deposit accounts yet")
-                                .font(.subheadline)
-                                .foregroundStyle(.gray)
-                            Spacer()
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 32)
-                    } else {
-                        ForEach(depositAccounts) { account in
-                            HStack(spacing: 12) {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color(.systemGray6))
-                                        .frame(width: 36, height: 36)
-                                    Image(systemName: account.type == .checking ? "dollarsign.arrow.circlepath" : "banknote")
-                                        .font(.system(size: 14))
-                                        .foregroundStyle(.gray)
-                                }
+                    ForEach(depositAccounts) { account in
+                        HStack(spacing: 12) {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.brandGreen)
+                                .frame(width: 32, height: 32)
+                                .overlay(
+                                    Image(systemName: "checkmark")
+                                        .font(.system(size: 12, weight: .heavy))
+                                        .foregroundStyle(Color(.systemBackground))
+                                )
 
-                                VStack(alignment: .leading, spacing: 1) {
-                                    Text(account.name)
-                                        .font(.subheadline)
-                                        .fontWeight(.semibold)
-                                    Text(account.type.displayName)
-                                        .font(.caption2)
-                                        .foregroundStyle(.gray)
-                                }
-
-                                Spacer()
-
-                                Button {
-                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                        deleteDepositAccount(account)
-                                    }
-                                } label: {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundStyle(.gray.opacity(0.4))
-                                }
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(account.name)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                Text(account.type.displayName)
+                                    .font(.caption2)
+                                    .foregroundStyle(.gray)
                             }
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 24)
 
-                            if account.id != depositAccounts.last?.id {
-                                Divider()
-                                    .padding(.leading, 72)
+                            Spacer()
+
+                            Button {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                    deleteDepositAccount(account)
+                                }
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.gray.opacity(0.4))
                             }
                         }
+                        .padding(14)
+                        .background(Color(.systemBackground))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(Color.brandGreen, lineWidth: 1.5)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .padding(.horizontal, 24)
                     }
+
+                    // Dashed add card
+                    HStack(spacing: 8) {
+                        Text("+")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(.gray)
+                        Text("Add another account")
+                            .font(.subheadline)
+                            .foregroundStyle(.gray)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(14)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(style: StrokeStyle(lineWidth: 1.5, dash: [6, 4]))
+                            .foregroundStyle(Color(.systemGray4))
+                    )
+                    .padding(.horizontal, 24)
                 }
             }
-            .scrollDismissesKeyboard(.interactively)
+            .scrollDismissesKeyboard(.immediately)
 
             Spacer(minLength: 0)
 
@@ -686,10 +753,15 @@ struct OnboardingView: View {
     private var accountsStep: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Add Your Accounts")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text("Credit cards and any other accounts you want to track.")
+                Text("Step 03 · Accounts")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(1.2)
+                    .foregroundStyle(.gray)
+                    .textCase(.uppercase)
+                Text("Any other accounts?")
+                    .font(.system(size: 34, weight: .bold))
+                    .tracking(-0.5)
+                Text("Credit cards, loans — track them alongside your paycheck.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -723,12 +795,8 @@ struct OnboardingView: View {
                     .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $showAccountLimitPaywall) {
-                ProFeaturePaywallView(trigger: .accountLimit)
+                ProPaywallView()
             }
-            .sheet(isPresented: $showDepositLimitPaywall) {
-                ProFeaturePaywallView(trigger: .depositLimit)
-            }
-
             if !nonDepositNonBillAccounts.isEmpty {
                 ScrollView {
                     VStack(spacing: 0) {
@@ -826,37 +894,106 @@ struct OnboardingView: View {
     private var billsStep: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Add Your Bills")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text("Rent, subscriptions, loans — add recurring bills to track.")
+                Text("Step 04 · Bills")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(1.2)
+                    .foregroundStyle(.gray)
+                    .textCase(.uppercase)
+                Text("Add what's coming out.")
+                    .font(.system(size: 34, weight: .bold))
+                    .tracking(-0.5)
+                Text("The big recurring ones. You can add more later — two free, unlimited with Pro.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
             .padding(.horizontal, 24)
 
-            Button {
-                let billCount = allBillAssignments.count
-                if subscriptionManager.canCreateBill(currentCount: billCount) {
-                    showCreateBill = true
-                } else {
-                    showBillsPaywall = true
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(allBillAssignments) { assignment in
+                        HStack(spacing: 12) {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.brandOrange.opacity(0.12))
+                                .frame(width: 36, height: 36)
+                                .overlay(
+                                    Image(systemName: assignment.category.iconName)
+                                        .font(.system(size: 14))
+                                        .foregroundStyle(Color.brandOrange)
+                                )
+
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(billAccountName(for: assignment))
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                Text(assignment.recurrence.shortLabel)
+                                    .font(.caption2)
+                                    .foregroundStyle(.gray)
+                            }
+
+                            Spacer()
+
+                            Text(assignment.amount.asCurrency())
+                                .font(.subheadline)
+                                .fontWeight(.bold)
+
+                            Button {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                    deleteBill(assignment)
+                                }
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.gray.opacity(0.4))
+                            }
+                        }
+                        .padding(14)
+                        .background(Color(.systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                    }
+
+                    // Dashed add bill card
+                    Button {
+                        let billCount = allBillAssignments.count
+                        if subscriptionManager.canCreateBill(currentCount: billCount) {
+                            showCreateBill = true
+                        } else {
+                            showBillsPaywall = true
+                        }
+                    } label: {
+                        Text("+ Add bill")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.gray)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14)
+                                    .stroke(style: StrokeStyle(lineWidth: 1.5, dash: [6, 4]))
+                                    .foregroundStyle(Color(.systemGray4))
+                            )
+                    }
+
+                    // Inline limit nudge
+                    if allBillAssignments.count >= 2 && !subscriptionManager.isPro {
+                        Button {
+                            showBillsPaywall = true
+                        } label: {
+                            HStack(spacing: 8) {
+                                Text("💡")
+                                Text("2 of 2 free bills used — upgrade for unlimited.")
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundStyle(.primary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 16)
+                            .background(Color.yellow.opacity(0.1))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                    }
                 }
-            } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.body)
-                    Text("Add Bill")
-                        .fontWeight(.bold)
-                }
-                .font(.body)
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(Color.brandGreen)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .padding(.horizontal, 24)
             }
-            .padding(.horizontal, 24)
             .sheet(isPresented: $showCreateBill) {
                 CreateBillSheet(
                     paycheckInstances: paycheckInstances,
@@ -867,65 +1004,7 @@ struct OnboardingView: View {
                 .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $showBillsPaywall) {
-                ProFeaturePaywallView(trigger: .bills)
-            }
-
-            if !allBillAssignments.isEmpty {
-                ScrollView {
-                    VStack(spacing: 0) {
-                        ForEach(allBillAssignments) { assignment in
-                            HStack(spacing: 12) {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color.brandOrange.opacity(0.12))
-                                        .frame(width: 36, height: 36)
-                                    Image(systemName: assignment.category.iconName)
-                                        .font(.system(size: 14))
-                                        .foregroundStyle(Color.brandOrange)
-                                }
-
-                                VStack(alignment: .leading, spacing: 1) {
-                                    Text(billAccountName(for: assignment))
-                                        .font(.subheadline)
-                                        .fontWeight(.semibold)
-                                    Text("\(assignment.amount.asCurrency()) · \(assignment.recurrence.shortLabel)")
-                                        .font(.caption2)
-                                        .foregroundStyle(.gray)
-                                }
-
-                                Spacer()
-
-                                Button {
-                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                        deleteBill(assignment)
-                                    }
-                                } label: {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundStyle(.gray.opacity(0.4))
-                                }
-                            }
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 24)
-
-                            if assignment.id != allBillAssignments.last?.id {
-                                Divider()
-                                    .padding(.leading, 72)
-                            }
-                        }
-                    }
-                }
-            } else {
-                VStack(spacing: 12) {
-                    Spacer()
-                    Image(systemName: "doc.text")
-                        .font(.system(size: 32))
-                        .foregroundStyle(.gray.opacity(0.4))
-                    Text("No bills yet")
-                        .font(.subheadline)
-                        .foregroundStyle(.gray)
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity)
+                ProPaywallView()
             }
 
             Spacer(minLength: 0)
@@ -964,34 +1043,67 @@ struct OnboardingView: View {
 
     // MARK: - Notifications (Step 5)
 
+    private var enabledAlertCount: Int {
+        [NotificationPreferences.paydayNotificationsEnabled,
+         NotificationPreferences.billRemindersEnabled,
+         NotificationPreferences.overspendingAlertsEnabled]
+            .filter { $0 }.count
+    }
+
     private var notificationStep: some View {
-        VStack(spacing: 24) {
-            Spacer()
-
-            ZStack {
-                Circle()
-                    .fill(Color.brandGreen.opacity(0.12))
-                    .frame(width: 100, height: 100)
-                Image(systemName: "bell.badge.fill")
-                    .font(.system(size: 48))
-                    .foregroundStyle(Color.brandGreen)
+        VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Step 05 · Notify")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(1.2)
+                    .foregroundStyle(.gray)
+                    .textCase(.uppercase)
+                Text("A nudge, not a nag.")
+                    .font(.system(size: 34, weight: .bold))
+                    .tracking(-0.5)
+                Text("Three local notifications, max. Nothing leaves your device.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
+            .padding(.horizontal, 24)
 
-            Text("Stay on Track")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-
-            Text("Get notified about upcoming bills,\noverspending, and new pay periods.")
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+            VStack(spacing: 10) {
+                notificationToggleRow(
+                    emoji: "💸",
+                    title: "Payday arrived",
+                    subtitle: "Ping when a new paycheck opens",
+                    isOn: Binding(
+                        get: { NotificationPreferences.paydayNotificationsEnabled },
+                        set: { NotificationPreferences.paydayNotificationsEnabled = $0 }
+                    )
+                )
+                notificationToggleRow(
+                    emoji: "📌",
+                    title: "Bills coming up",
+                    subtitle: "1 day before due date",
+                    isOn: Binding(
+                        get: { NotificationPreferences.billRemindersEnabled },
+                        set: { NotificationPreferences.billRemindersEnabled = $0 }
+                    )
+                )
+                notificationToggleRow(
+                    emoji: "⚠️",
+                    title: "Over 90% used",
+                    subtitle: "Fires once per paycheck",
+                    isOn: Binding(
+                        get: { NotificationPreferences.overspendingAlertsEnabled },
+                        set: { NotificationPreferences.overspendingAlertsEnabled = $0 }
+                    )
+                )
+            }
+            .padding(.horizontal, 24)
 
             Spacer()
 
             Button {
                 requestNotificationPermission()
             } label: {
-                Text("Enable Notifications")
+                Text("Turn on \(enabledAlertCount) alert\(enabledAlertCount == 1 ? "" : "s")")
                     .font(.body)
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
@@ -1005,12 +1117,40 @@ struct OnboardingView: View {
             Button {
                 withAnimation { step = 5 }
             } label: {
-                Text("Maybe Later")
+                Text("or skip for now")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
             }
+            .frame(maxWidth: .infinity)
             .padding(.bottom, 40)
         }
+    }
+
+    private func notificationToggleRow(emoji: String, title: String, subtitle: String, isOn: Binding<Bool>) -> some View {
+        HStack(spacing: 14) {
+            Text(emoji)
+                .font(.system(size: 24))
+                .frame(width: 36)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 15, weight: .semibold))
+                Text(subtitle)
+                    .font(.system(size: 12))
+                    .foregroundStyle(.gray)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: isOn)
+                .labelsHidden()
+                .tint(Color.brandGreen)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
     }
 
     private func requestNotificationPermission() {
@@ -1023,7 +1163,15 @@ struct OnboardingView: View {
         }
     }
 
-    // MARK: - Pro Paywall (Step 6)
+    // MARK: - Preview (Step 6)
+
+    private var previewStep: some View {
+        OnboardingPreviewView {
+            withAnimation { step = 6 }
+        }
+    }
+
+    // MARK: - Pro Paywall (Step 7)
 
     private var proPaywallStep: some View {
         ProPaywallView(onContinueFree: {

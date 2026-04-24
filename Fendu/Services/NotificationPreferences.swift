@@ -9,7 +9,7 @@ enum NotificationPreferences {
     }
 
     static var overspendingAlertsEnabled: Bool {
-        get { defaults.object(forKey: "notif.overspending") as? Bool ?? true }
+        get { defaults.object(forKey: "notif.overspending") as? Bool ?? false }
         set { defaults.set(newValue, forKey: "notif.overspending") }
     }
 

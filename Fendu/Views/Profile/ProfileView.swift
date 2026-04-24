@@ -54,10 +54,7 @@ struct ProfileView: View {
                 .padding(16)
             }
             .background(Color(.systemGroupedBackground))
-            .scrollDismissesKeyboard(.interactively)
-            .onTapGesture {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            }
+            .scrollDismissesKeyboard(.immediately)
             .navigationTitle("Profile")
         }
         .onAppear {

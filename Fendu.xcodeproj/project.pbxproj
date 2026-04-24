@@ -72,6 +72,8 @@
 		AA000065001 /* BillPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000065001 /* BillPayment.swift */; };
 		AA000066001 /* TransactionPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000066001 /* TransactionPayment.swift */; };
 		AA000067001 /* PaycheckAmountOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000067001 /* PaycheckAmountOverride.swift */; };
+		AA000068001 /* OnboardingPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000068001 /* OnboardingPreviewView.swift */; };
+		AA000069001 /* PricingCardPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000069001 /* PricingCardPair.swift */; };
 		BB000001001 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005001 /* Account.swift */; };
 		BB000002001 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009001 /* Transaction.swift */; };
 		BB000003001 /* PaycheckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007001 /* PaycheckConfig.swift */; };
@@ -190,6 +192,8 @@
 		AB000065001 /* BillPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillPayment.swift; sourceTree = "<group>"; };
 		AB000066001 /* TransactionPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPayment.swift; sourceTree = "<group>"; };
 		AB000067001 /* PaycheckAmountOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckAmountOverride.swift; sourceTree = "<group>"; };
+		AB000068001 /* OnboardingPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPreviewView.swift; sourceTree = "<group>"; };
+		AB000069001 /* PricingCardPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingCardPair.swift; sourceTree = "<group>"; };
 		AC000001001 /* Fendu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fendu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7B254C2F847A3F004648C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DA7B25512F849DC8004648C8 /* FenduWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FenduWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -418,6 +422,7 @@
 			isa = PBXGroup;
 			children = (
 				AB000064001 /* OnboardingQuestionnaireView.swift */,
+				AB000068001 /* OnboardingPreviewView.swift */,
 				AB000036001 /* OnboardingView.swift */,
 			);
 			path = Onboarding;
@@ -437,6 +442,7 @@
 				AB000043001 /* ProBadgeView.swift */,
 				AB000044001 /* ProPaywallView.swift */,
 				AB000045001 /* ProFeaturePaywallView.swift */,
+				AB000069001 /* PricingCardPair.swift */,
 			);
 			path = Subscription;
 			sourceTree = "<group>";
@@ -631,6 +637,8 @@
 				AA000065001 /* BillPayment.swift in Sources */,
 				AA000066001 /* TransactionPayment.swift in Sources */,
 				AA000067001 /* PaycheckAmountOverride.swift in Sources */,
+				AA000068001 /* OnboardingPreviewView.swift in Sources */,
+				AA000069001 /* PricingCardPair.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

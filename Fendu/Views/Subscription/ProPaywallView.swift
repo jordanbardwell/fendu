@@ -11,146 +11,119 @@ struct ProPaywallView: View {
     @State private var isPurchasing = false
     @State private var errorMessage: String?
 
-    enum PlanChoice { case yearly, monthly }
-
-    private var trialEndDate: String {
-        let date = Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yy"
-        return formatter.string(from: date)
-    }
-
-    private var reminderDate: String {
-        let date = Calendar.current.date(byAdding: .day, value: 5, to: Date()) ?? Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yy"
-        return formatter.string(from: date)
-    }
-
     private var selectedProduct: Product? {
         selectedPlan == .yearly ? subscriptionManager.yearlyProduct : subscriptionManager.monthlyProduct
     }
 
-    private var pricingSummary: String {
-        switch selectedPlan {
-        case .yearly:
-            return "7 days free, then \(subscriptionManager.yearlyProduct?.displayPrice ?? "$29.99")/yr"
-        case .monthly:
-            return "7 days free, then \(subscriptionManager.monthlyProduct?.displayPrice ?? "$3.99")/mo"
-        }
+    private struct FeatureRow: Identifiable {
+        let id = UUID()
+        let title: String
+        let subtitle: String
     }
+
+    private let features: [FeatureRow] = [
+        FeatureRow(title: "Unlimited bills & accounts", subtitle: "Model your life as it actually is."),
+        FeatureRow(title: "Paycheck splits across accounts", subtitle: "Fixed + Remainder, running balance, the works."),
+        FeatureRow(title: "Income tracking", subtitle: "Side gigs, Venmo, refunds — all counted."),
+        FeatureRow(title: "iCloud sync across devices", subtitle: "Your data, your iCloud, not our servers."),
+    ]
 
     var body: some View {
         ZStack {
-            // Dark background
-            Color.black.ignoresSafeArea()
-
-            // Gradient glow at top
-            VStack(spacing: 0) {
-                Ellipse()
-                    .fill(
-                        RadialGradient(
-                            colors: [Color.brandGreen.opacity(0.3), Color.clear],
-                            center: .center,
-                            startRadius: 10,
-                            endRadius: 200
-                        )
-                    )
-                    .frame(height: 300)
-                    .offset(y: -80)
-
-                Spacer()
-            }
-            .ignoresSafeArea()
+            Color(red: 10/255, green: 10/255, blue: 10/255)
+                .ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: 24) {
-                    Spacer().frame(height: 20)
-
-                    // App icon with Pro badge
-                    ZStack(alignment: .topTrailing) {
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color(.systemGray4), Color(.systemGray6)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(width: 80, height: 80)
-                            .overlay(
-                                Text("F")
-                                    .font(.system(size: 36, weight: .bold))
-                                    .foregroundStyle(.white)
-                            )
-
-                        Text("Pro")
+                VStack(alignment: .leading, spacing: 0) {
+                    // Top bar
+                    HStack {
+                        Text("/ fendu pro")
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color.brandOrange)
-                            .clipShape(Capsule())
-                            .offset(x: 8, y: -6)
+                            .tracking(1.4)
+                            .textCase(.uppercase)
+                            .foregroundStyle(Color.brandGreen)
+
+                        Spacer()
+
+                        Button {
+                            if let onContinueFree {
+                                onContinueFree()
+                            } else {
+                                dismiss()
+                            }
+                        } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(.gray)
+                        }
                     }
+                    .padding(.top, 16)
+                    .padding(.bottom, 28)
 
-                    // Title
-                    VStack(spacing: 8) {
-                        Text("Get the most out of Fendu")
-                            .font(.system(size: 26, weight: .bold))
-                            .foregroundStyle(.white)
-
-                        Text("Unlock all features tailored to your finances")
-                            .font(.subheadline)
-                            .foregroundStyle(.gray)
+                    // Headline with green highlight
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Plan every")
+                            .font(.system(size: 44, weight: .black))
+                            .tracking(-1.5)
+                        Text("paycheck.")
+                            .font(.system(size: 44, weight: .black))
+                            .tracking(-1.5)
+                        Text("Every bill.")
+                            .font(.system(size: 44, weight: .black))
+                            .tracking(-1.5)
+                        HStack(spacing: 0) {
+                            Text("Every ")
+                                .font(.system(size: 44, weight: .black))
+                                .tracking(-1.5)
+                            Text("account.")
+                                .font(.system(size: 44, weight: .black))
+                                .tracking(-1.5)
+                                .foregroundStyle(Color(red: 10/255, green: 10/255, blue: 10/255))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 2)
+                                .background(Color.brandGreen)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
                     }
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .foregroundStyle(.white)
+                    .padding(.bottom, 32)
 
-                    // Plan toggle
-                    HStack(spacing: 0) {
-                        planToggleButton("Yearly", plan: .yearly)
-                        planToggleButton("Monthly", plan: .monthly)
+                    // Feature rows
+                    VStack(alignment: .leading, spacing: 14) {
+                        ForEach(features) { feature in
+                            HStack(alignment: .top, spacing: 14) {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.brandGreen)
+                                    .frame(width: 28, height: 28)
+                                    .overlay(
+                                        Image(systemName: "checkmark")
+                                            .font(.system(size: 13, weight: .heavy))
+                                            .foregroundStyle(Color(red: 10/255, green: 10/255, blue: 10/255))
+                                    )
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(feature.title)
+                                        .font(.system(size: 15, weight: .bold))
+                                        .foregroundStyle(.white)
+                                    Text(feature.subtitle)
+                                        .font(.system(size: 13))
+                                        .foregroundStyle(.gray)
+                                        .lineSpacing(2)
+                                }
+                            }
+                        }
                     }
-                    .background(Color(.systemGray5))
-                    .clipShape(Capsule())
-                    .padding(.horizontal, 80)
+                    .padding(.bottom, 32)
 
-                    // Timeline
-                    VStack(alignment: .leading, spacing: 0) {
-                        timelineItem(
-                            icon: "sparkles",
-                            iconColor: Color.brandGreen,
-                            title: "Today",
-                            description: "Unlock unlimited accounts, bills, splits, and income tracking.",
-                            isLast: false
-                        )
-
-                        timelineItem(
-                            icon: "bell.fill",
-                            iconColor: Color.brandOrange,
-                            title: "Day 5",
-                            description: "Receive a reminder from us about your trial ending.",
-                            isLast: false
-                        )
-
-                        timelineItem(
-                            icon: "star.fill",
-                            iconColor: .yellow,
-                            title: "Day 7",
-                            description: "Trial ends on \(trialEndDate). Continue Pro subscription or use Fendu for free at no cost.",
-                            isLast: true
-                        )
-                    }
-                    .padding(.horizontal, 24)
-
-                    Spacer().frame(height: 8)
-
-                    // Pricing summary
-                    Text(pricingSummary)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.brandGreen)
+                    // Pricing cards
+                    PricingCardPair(
+                        selectedPlan: $selectedPlan,
+                        monthlyPrice: subscriptionManager.monthlyProduct?.displayPrice ?? "$3.99",
+                        yearlyPrice: subscriptionManager.yearlyProduct?.displayPrice ?? "$29.99",
+                        yearlyMonthly: "$2.50/mo",
+                        savingsLabel: "SAVE 37%"
+                    )
+                    .padding(.bottom, 16)
 
                     // Error message
                     if let errorMessage {
@@ -158,56 +131,46 @@ struct ProPaywallView: View {
                             .font(.caption)
                             .foregroundStyle(.red)
                             .multilineTextAlignment(.center)
-                            .padding(.horizontal, 24)
+                            .frame(maxWidth: .infinity)
+                            .padding(.bottom, 8)
                     }
 
-                    // CTA button
+                    // CTA
                     Button {
                         Task { await handlePurchase() }
                     } label: {
-                        Text(isPurchasing ? "Processing..." : "Start for $0.00")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(.white)
+                        Text(isPurchasing ? "Processing..." : "Start 7-day free trial")
+                            .font(.system(size: 17, weight: .bold))
+                            .foregroundStyle(Color(red: 10/255, green: 10/255, blue: 10/255))
                             .frame(maxWidth: .infinity)
                             .frame(height: 56)
                             .background(Color.brandGreen)
-                            .clipShape(RoundedRectangle(cornerRadius: 28))
+                            .clipShape(RoundedRectangle(cornerRadius: 999))
                     }
                     .disabled(isPurchasing)
-                    .padding(.horizontal, 24)
+                    .padding(.bottom, 12)
 
-                    // Continue free
-                    Button {
-                        if let onContinueFree {
-                            onContinueFree()
-                        } else {
-                            dismiss()
-                        }
-                    } label: {
-                        Text("Or continue with Free plan")
-                            .font(.subheadline)
+                    // Footer
+                    HStack(spacing: 4) {
+                        Text("Cancel anytime")
                             .foregroundStyle(.gray)
-                    }
 
-                    // Restore
-                    Button {
-                        Task { await subscriptionManager.restorePurchases() }
-                    } label: {
-                        Text("Restore purchase")
-                            .font(.caption)
-                            .foregroundStyle(.gray.opacity(0.6))
-                    }
-                    .padding(.bottom, 16)
+                        Text("·")
+                            .foregroundStyle(.gray)
 
-                    // Terms
-                    HStack(spacing: 16) {
-                        Text("Terms of Use")
-                        Text("Privacy Policy")
+                        Button {
+                            Task { await subscriptionManager.restorePurchases() }
+                        } label: {
+                            Text("Restore purchase")
+                                .foregroundStyle(.gray)
+                                .underline()
+                        }
                     }
-                    .font(.caption2)
-                    .foregroundStyle(.gray.opacity(0.4))
+                    .font(.system(size: 12))
+                    .frame(maxWidth: .infinity)
                     .padding(.bottom, 24)
                 }
+                .padding(.horizontal, 24)
             }
         }
         .preferredColorScheme(.dark)
@@ -215,61 +178,6 @@ struct ProPaywallView: View {
             if subscriptionManager.products.isEmpty {
                 await subscriptionManager.loadProducts()
             }
-        }
-    }
-
-    // MARK: - Subviews
-
-    private func planToggleButton(_ label: String, plan: PlanChoice) -> some View {
-        Button {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                selectedPlan = plan
-            }
-        } label: {
-            Text(label)
-                .font(.system(size: 15, weight: selectedPlan == plan ? .semibold : .regular))
-                .foregroundStyle(selectedPlan == plan ? .white : .gray)
-                .frame(maxWidth: .infinity)
-                .frame(height: 36)
-                .background(selectedPlan == plan ? Color(.systemGray3) : .clear)
-                .clipShape(Capsule())
-        }
-    }
-
-    private func timelineItem(icon: String, iconColor: Color, title: String, description: String, isLast: Bool) -> some View {
-        HStack(alignment: .top, spacing: 16) {
-            // Timeline line + icon
-            VStack(spacing: 0) {
-                ZStack {
-                    Circle()
-                        .fill(iconColor.opacity(0.2))
-                        .frame(width: 40, height: 40)
-
-                    Image(systemName: icon)
-                        .font(.system(size: 16))
-                        .foregroundStyle(iconColor)
-                }
-
-                if !isLast {
-                    Rectangle()
-                        .fill(Color(.systemGray4))
-                        .frame(width: 2)
-                        .frame(minHeight: 40)
-                }
-            }
-
-            // Text content
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(.white)
-
-                Text(description)
-                    .font(.system(size: 14))
-                    .foregroundStyle(.gray)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.bottom, isLast ? 0 : 16)
         }
     }
 

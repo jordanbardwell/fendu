@@ -64,7 +64,7 @@ struct OnboardingQuestionnaireView: View {
             .padding(.horizontal, 24)
             .padding(.top, 16)
             .padding(.bottom, 28)
-            .opacity(step == 4 ? 0 : 1)
+            .opacity(step == 0 || step == 4 ? 0 : 1)
 
             switch step {
             case 0: welcomeStep
@@ -83,47 +83,57 @@ struct OnboardingQuestionnaireView: View {
     // MARK: - Screen 1: Welcome
 
     private var welcomeStep: some View {
-        VStack(spacing: 24) {
+        VStack(alignment: .leading, spacing: 0) {
             Spacer()
 
-            ZStack {
-                Circle()
-                    .fill(Color.brandGreen.opacity(0.12))
-                    .frame(width: 100, height: 100)
-                Image(systemName: "arrow.triangle.branch")
-                    .font(.system(size: 44))
-                    .foregroundStyle(Color.brandGreen)
-            }
+            // App icon
+            RoundedRectangle(cornerRadius: 16)
+                .fill(.white)
+                .frame(width: 56, height: 56)
+                .overlay(
+                    Image(systemName: "dollarsign.circle.fill")
+                        .font(.system(size: 28))
+                        .foregroundStyle(Color.brandGreen)
+                )
+                .padding(.bottom, 36)
 
-            VStack(spacing: 12) {
-                Text("Your paycheck,\nplanned in seconds")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .multilineTextAlignment(.center)
+            Text("Welcome to\nfendu.")
+                .font(.system(size: 48, weight: .black))
+                .tracking(-2)
+                .lineSpacing(-4)
+                .foregroundStyle(.white)
 
-                Text("Stop splitting paychecks in a spreadsheet.\nFendu allocates your money before you spend it.")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
+            Text("Plan every paycheck. Split across accounts.\nKnow exactly what's left.")
+                .font(.system(size: 16))
+                .foregroundStyle(.white.opacity(0.95))
+                .padding(.top, 20)
 
             Spacer()
 
             Button {
                 withAnimation { step = 1 }
             } label: {
-                Text("Get Started")
+                Text("Get started")
                     .font(.body)
                     .fontWeight(.bold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.black)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 18)
-                    .background(Color.brandGreen)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 999))
             }
             .padding(.horizontal, 24)
-            .padding(.bottom, 40)
+
+            Text("Takes about 2 minutes")
+                .font(.system(size: 13))
+                .foregroundStyle(.white.opacity(0.75))
+                .frame(maxWidth: .infinity)
+                .padding(.top, 14)
+                .padding(.bottom, 40)
         }
+        .padding(.horizontal, 24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.brandGreen)
     }
 
     // MARK: - Screen 2: Goal Question
