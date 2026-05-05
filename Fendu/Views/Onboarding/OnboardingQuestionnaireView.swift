@@ -87,14 +87,10 @@ struct OnboardingQuestionnaireView: View {
             Spacer()
 
             // App icon
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.white)
+            Image("FenduLogo")
+                .resizable()
                 .frame(width: 56, height: 56)
-                .overlay(
-                    Image(systemName: "dollarsign.circle.fill")
-                        .font(.system(size: 28))
-                        .foregroundStyle(Color.brandGreen)
-                )
+                .clipShape(RoundedRectangle(cornerRadius: 14))
                 .padding(.bottom, 36)
 
             Text("Welcome to\nfendu.")

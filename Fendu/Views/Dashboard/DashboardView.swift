@@ -438,18 +438,6 @@ struct DashboardView: View {
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
             }
             .listStyle(.plain)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "dollarsign.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.brandGreen)
-                        Text("Fendu")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                    }
-                }
-            }
             .sheet(isPresented: $appState.showAddTransaction) {
                 AddTransactionSheet(
                     accounts: accounts,

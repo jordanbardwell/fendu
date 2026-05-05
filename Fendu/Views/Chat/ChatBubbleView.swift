@@ -15,10 +15,9 @@ struct ChatBubbleView: View {
                 }
 
                 if message.role == .assistant {
-                    Image(systemName: "dollarsign.circle.fill")
-                        .font(.system(size: 24))
-                        .foregroundStyle(Color.brandGreen)
-                        .padding(.top, 2)
+                    FenduMark(size: 18)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 4)
                 }
 
                 formattedText

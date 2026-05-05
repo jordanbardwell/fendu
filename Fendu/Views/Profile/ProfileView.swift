@@ -379,14 +379,10 @@ struct ProfileView: View {
     private var paycheckSettingsCard: some View {
         VStack(alignment: .leading, spacing: 24) {
             HStack(spacing: 10) {
-                ZStack {
-                    Circle()
-                        .fill(Color.brandGreen.opacity(0.12))
-                        .frame(width: 40, height: 40)
-                    Image(systemName: "dollarsign.circle.fill")
-                        .font(.system(size: 18))
-                        .foregroundStyle(Color.brandGreen)
-                }
+                Image("FenduLogo")
+                    .resizable()
+                    .frame(width: 36, height: 36)
+                    .clipShape(RoundedRectangle(cornerRadius: 9))
                 Text("Paycheck Settings")
                     .font(.title3)
                     .fontWeight(.bold)

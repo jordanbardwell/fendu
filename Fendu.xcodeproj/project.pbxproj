@@ -74,6 +74,7 @@
 		AA000067001 /* PaycheckAmountOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000067001 /* PaycheckAmountOverride.swift */; };
 		AA000068001 /* OnboardingPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000068001 /* OnboardingPreviewView.swift */; };
 		AA000069001 /* PricingCardPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000069001 /* PricingCardPair.swift */; };
+		AA000070001 /* FenduMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000070001 /* FenduMark.swift */; };
 		BB000001001 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005001 /* Account.swift */; };
 		BB000002001 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009001 /* Transaction.swift */; };
 		BB000003001 /* PaycheckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007001 /* PaycheckConfig.swift */; };
@@ -194,6 +195,7 @@
 		AB000067001 /* PaycheckAmountOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaycheckAmountOverride.swift; sourceTree = "<group>"; };
 		AB000068001 /* OnboardingPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPreviewView.swift; sourceTree = "<group>"; };
 		AB000069001 /* PricingCardPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingCardPair.swift; sourceTree = "<group>"; };
+		AB000070001 /* FenduMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FenduMark.swift; sourceTree = "<group>"; };
 		AC000001001 /* Fendu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fendu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7B254C2F847A3F004648C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DA7B25512F849DC8004648C8 /* FenduWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FenduWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -431,6 +433,7 @@
 		AE000016001 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				AB000070001 /* FenduMark.swift */,
 				AB000038001 /* SplitAssignmentView.swift */,
 			);
 			path = Shared;
@@ -639,6 +642,7 @@
 				AA000067001 /* PaycheckAmountOverride.swift in Sources */,
 				AA000068001 /* OnboardingPreviewView.swift in Sources */,
 				AA000069001 /* PricingCardPair.swift in Sources */,
+				AA000070001 /* FenduMark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -809,7 +813,7 @@
 				CODE_SIGN_ENTITLEMENTS = Fendu/BalanceBookGoldDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 465YW8KC93;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -827,7 +831,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jordanbardwell.Fendu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -844,7 +848,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Fendu/Fendu.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 465YW8KC93;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -862,7 +866,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jordanbardwell.Fendu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
